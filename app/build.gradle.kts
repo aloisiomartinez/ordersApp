@@ -55,6 +55,11 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation)
+    implementation(libs.androidx.material.icons)
+    implementation("androidx.compose.material3:material3:1.2.1") // Verifique a versão mais recente
+    implementation("androidx.compose.material:material-icons-core:1.6.8") // Para Icons.Filled.algo
+    implementation("androidx.compose.material:material-icons-extended:1.6.8") // Opcional, para mais ícones
+
 
     // Testing
     testImplementation(libs.junit)

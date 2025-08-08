@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">KingBurguer</string>
+    <string name="email">E-mail\n</string>
+    <string name="hint_email">Digite o seu e-mail\n</string>
+    <string name="password">Senha\n</string>
+    <string name="hint_password">Digite sua senha\n</string>
+    <string name="send">Enviar</string>
+    <string name="show_password">Mostrar senha\n</string>
+    <string name="hide_password">Esconder senha\n</string>
 </resources>
