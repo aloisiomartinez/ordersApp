@@ -1,9 +1,12 @@
 package com.example.kingburguer.compose.login
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,7 +23,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +33,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -37,29 +44,39 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.kingburguer.R
+import com.example.kingburguer.compose.login.component.KingButton
+import com.example.kingburguer.compose.login.component.KingTextField
+import com.example.kingburguer.compose.login.component.KingTextTitle
 import com.example.kingburguer.ui.theme.KingBurguerTheme
 
 @Composable
 fun LoginScreen() {
     Surface(
-        modifier = Modifier.fillMaxSize().padding(12.dp)
+        modifier = Modifier.fillMaxSize()
     ) {
         val scrollState = rememberScrollState()
         var passwordHidden by remember { mutableStateOf(true) }
 
         Column(
-            verticalArrangement = Arrangement.Center,
+
+        ) {
+
+        Column(
+            verticalArrangement = Arrangement.spacedBy(14.dp, Alignment.Top),
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .verticalScroll(scrollState)
+                .padding(horizontal = 20.dp)
         ) {
+
+            KingTextTitle(text = stringResource(R.string.login))
+
             KingTextField(
                 value = "todo",
                 label = R.string.email,
                 placeholder = R.string.hint_email,
                 keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next,
-                modifier = Modifier.padding(10.dp)
+                imeAction = ImeAction.Next
             ) {
 
             }
@@ -71,7 +88,6 @@ fun LoginScreen() {
                 keyboardType = KeyboardType.Password,
                 ofuscate = passwordHidden,
                 imeAction = ImeAction.Done,
-                modifier = Modifier.padding(10.dp),
                 trailingIcon = {
                     IconButton(
                         onClick = {
@@ -101,54 +117,54 @@ fun LoginScreen() {
 
             }
 
-            OutlinedButton(
-                onClick = {},
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Checkbox(
+                    checked = true,
+                    onCheckedChange = {}
+                )
+
+                Text(stringResource(id = R.string.remember_me))
+
+            }
+
+            KingButton(
+                text = stringResource(id = R.string.send),
                 enabled = true
             ) {
-                Text(
-                    stringResource(id = R.string.send)
-                )
+
             }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(id = R.string.have_account))
+                TextButton(
+                    onClick = {}
+                ) {
+                    Text(stringResource(id = R.string.sign_up))
+
+                }
+            }
+            }
+
+
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                alignment = Alignment.BottomCenter,
+                painter = painterResource(R.drawable.cover3),
+                contentDescription = stringResource(id = R.string.hamburguer)
+            )
         }
     }
 }
 
-@Composable
-fun KingTextField(
-    value: String,
-    @StringRes label: Int,
-    @StringRes placeholder: Int,
-    keyboardType: KeyboardType = KeyboardType.Text,
-    imeAction: ImeAction = ImeAction.Next,
-    ofuscate: Boolean = false,
-    modifier: Modifier = Modifier,
-    trailingIcon: @Composable (() -> Unit) ?= null,
-    onValueChange: (String) -> Unit,
-) {
-    OutlinedTextField(
-        modifier = modifier.fillMaxWidth(),
-        onValueChange = onValueChange,
-        value = value,
-        maxLines = 1,
-        label = {
-            Text(stringResource(id = label))
-        },
-        placeholder = {
-            Text(stringResource(id = placeholder))
-        },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = keyboardType,
-            imeAction = imeAction
-        ),
-        trailingIcon = trailingIcon,
-        visualTransformation = if (ofuscate) {
-            PasswordVisualTransformation()
-        } else {
-            VisualTransformation.None
-        }
-    )
 
-}
 
 @Preview(showBackground = true)
 @Composable

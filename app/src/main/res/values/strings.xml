@@ -7,4 +7,9 @@
     <string name="send">Enviar</string>
     <string name="show_password">Mostrar senha\n</string>
     <string name="hide_password">Esconder senha\n</string>
+    <string name="login">Login\n</string>
+    <string name="remember_me">Lembrar-me</string>
+    <string name="have_account">Não tem uma conta?</string>
+    <string name="sign_up">Cadastrar!</string>
+    <string name="hamburguer">Hambuguer\n</string>
 </resources>
