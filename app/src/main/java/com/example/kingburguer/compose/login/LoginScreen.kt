@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -39,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kingburguer.R
+import com.example.kingburguer.compose.login.component.KingAlert
 import com.example.kingburguer.compose.login.component.KingButton
 import com.example.kingburguer.compose.login.component.KingTextField
 import com.example.kingburguer.compose.login.component.KingTextTitle
@@ -72,12 +74,16 @@ fun LoginScreen(
                 .padding(horizontal = 20.dp)
         ) {
 
-            if (uiState.isLoading) {
-                KingTextTitle(text = "Está carregando")
-            } else if (uiState.goToHome) {
-                KingTextTitle(text = "Está indo para Home")
-            } else {
-                KingTextTitle(text = "Está ocioso")
+            uiState.error?.let { messageError ->
+                KingAlert(
+                    dialogTitle = stringResource(id = R.string.app_name),
+                    dialogText = messageError,
+                    onDismissRequest = {},
+                    onConfirmation = {
+                        loginViewModel.reset()
+                    },
+                    icon = Icons.Filled.Info
+                )
             }
 
             KingTextTitle(text = stringResource(R.string.login))

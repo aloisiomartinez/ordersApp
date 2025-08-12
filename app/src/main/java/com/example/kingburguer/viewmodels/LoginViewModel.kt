@@ -33,10 +33,18 @@ class LoginViewModel: ViewModel() {
         viewModelScope.launch {
             delay(3000)
             _uiState.update {
-                it.copy(isLoading = false, goToHome = true)
+                it.copy(isLoading = false, error = "Usuario não encontrado!")
             }
         }
     }
+
+    fun reset() {
+        _uiState.update {
+            LoginUiState()
+        }
+    }
+
+
 }
 
 
