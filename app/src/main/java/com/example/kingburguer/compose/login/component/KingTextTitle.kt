@@ -24,7 +24,6 @@ fun KingTextTitle(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 20.dp)
-
     )
 }
 
