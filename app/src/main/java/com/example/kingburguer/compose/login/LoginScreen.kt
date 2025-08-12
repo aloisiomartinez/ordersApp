@@ -50,7 +50,8 @@ import com.example.kingburguer.viewmodels.LoginViewModel
 @Composable
 fun LoginScreen(
     contentPadding: PaddingValues,
-    loginViewModel: LoginViewModel = viewModel()
+    loginViewModel: LoginViewModel = viewModel(),
+    onSignUpClick: () -> Unit
 ) {
     Surface(
         modifier = Modifier.fillMaxSize().padding(contentPadding)
@@ -59,8 +60,6 @@ fun LoginScreen(
         var passwordHidden by remember { mutableStateOf(true) }
 
         val uiState by loginViewModel.uiState.collectAsState()
-        
-
 
         Column(
 
@@ -162,7 +161,7 @@ fun LoginScreen(
             ) {
                 Text(stringResource(id = R.string.have_account))
                 TextButton(
-                    onClick = {}
+                    onClick = onSignUpClick
                 ) {
                     Text(stringResource(id = R.string.sign_up))
 
@@ -190,7 +189,8 @@ fun LightLoginScreenPreview() {
         darkTheme = false
     ) {
         LoginScreen(
-            contentPadding = PaddingValues()
+            contentPadding = PaddingValues(),
+            onSignUpClick = {}
         )
     }
 }
@@ -202,7 +202,9 @@ fun DarkLoginScreenPreview() {
         darkTheme = true
     ) {
         LoginScreen(
-            contentPadding = PaddingValues()
+            contentPadding = PaddingValues(),
+            onSignUpClick = {}
+
         )
     }
 }
