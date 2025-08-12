@@ -59,7 +59,7 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.1") // Verifique a versão mais recente
     implementation("androidx.compose.material:material-icons-core:1.6.8") // Para Icons.Filled.algo
     implementation("androidx.compose.material:material-icons-extended:1.6.8") // Opcional, para mais ícones
-
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
 
     // Testing
     testImplementation(libs.junit)

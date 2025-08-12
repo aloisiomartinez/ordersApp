@@ -4,23 +4,30 @@ import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorScheme = darkColorScheme(
     primary = Orange200,
     secondary = PurpleGrey80,
-    tertiary = Pink80
+    tertiary = Pink80,
+    onPrimary = Color.White
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Orange600,
     secondary = PurpleGrey40,
-    tertiary = Pink40
+    tertiary = Pink40,
+    onPrimary = Color.White
+
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -48,6 +55,17 @@ fun KingBurguerTheme(
 
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
+    }
+
+    val systemUiController = rememberSystemUiController()
+    val useDarkIcons = !darkTheme // Ou !colors.isLight se você tiver essa propriedade
+
+    SideEffect {
+        // Define a cor da status bar
+        systemUiController.setStatusBarColor(
+            color = LightColorScheme.primary,
+            darkIcons = useDarkIcons
+        )
     }
 
     MaterialTheme(

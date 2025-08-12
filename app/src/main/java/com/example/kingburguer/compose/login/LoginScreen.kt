@@ -1,5 +1,6 @@
 package com.example.kingburguer.compose.login
 
+import android.content.res.Resources.Theme
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -171,8 +172,22 @@ fun LoginScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun LoginScreenPreview() {
-    KingBurguerTheme {
+fun LightLoginScreenPreview() {
+    KingBurguerTheme(
+        darkTheme = false
+    ) {
+        LoginScreen(
+            contentPadding = PaddingValues()
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DarkLoginScreenPreview() {
+    KingBurguerTheme(
+        darkTheme = true
+    ) {
         LoginScreen(
             contentPadding = PaddingValues()
         )
