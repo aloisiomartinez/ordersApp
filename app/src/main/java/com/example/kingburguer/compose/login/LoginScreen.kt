@@ -49,6 +49,7 @@ import com.example.kingburguer.viewmodels.LoginViewModel
 
 @Composable
 fun LoginScreen(
+    onSignUpClick: () -> Unit,
     contentPadding: PaddingValues,
     loginViewModel: LoginViewModel = viewModel()
 ) {
@@ -160,7 +161,7 @@ fun LoginScreen(
             ) {
                 Text(stringResource(id = R.string.have_account))
                 TextButton(
-                    onClick = {}
+                    onClick = onSignUpClick
                 ) {
                     Text(stringResource(id = R.string.sign_up))
 
@@ -188,6 +189,7 @@ fun LightLoginScreenPreview() {
         darkTheme = false
     ) {
         LoginScreen(
+            onSignUpClick = {},
             contentPadding = PaddingValues()
         )
     }
@@ -202,6 +204,7 @@ fun DarkLoginScreenPreview() {
         darkTheme = true
     ) {
         LoginScreen(
+            onSignUpClick = {},
             contentPadding = PaddingValues()
         )
     }
