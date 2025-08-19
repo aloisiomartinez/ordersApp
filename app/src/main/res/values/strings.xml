@@ -13,4 +13,12 @@
     <string name="sign_up">Cadastrar!</string>
     <string name="hamburguer">Hambuguer\n</string>
     <string name="alert_text">Ícone do Alerta</string>
+    <string name="signup">Cadastro</string>
+    <string name="confirm_password">Confirmar Senha</string>
+    <string name="hint_confirm_password">Digite novamente a senha</string>
+    <string name="document">Digite seu CPF\n</string>
+    <string name="birthday">Data de nascimento\n</string>
+    <string name="hint_birthday">Digite sua data de nascimento\n</string>
+    <string name="name">Nome</string>
+    <string name="hint_name">Digite seu nome\n</string>
 </resources>
