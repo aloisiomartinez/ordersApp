@@ -28,14 +28,16 @@ fun KingBurguerNavHost(navController: NavHostController, contentPadding: Padding
     ) {
         composable(Screen.LOGIN.route) {
             LoginScreen(
-                contentPadding
-            ) {
-                navController.navigate(Screen.SIGNUP.route)
-            }
-        }
+                onSignUpClick = { navController.navigate(Screen.SIGNUP.route) },
+                contentPadding = contentPadding
+            )
 
+
+        }
         composable(Screen.SIGNUP.route) {
-            SignUpScreen()
+            SignUpScreen() {
+                navController.navigateUp()
+            }
         }
     }
 }

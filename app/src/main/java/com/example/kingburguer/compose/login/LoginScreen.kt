@@ -49,9 +49,9 @@ import com.example.kingburguer.viewmodels.LoginViewModel
 
 @Composable
 fun LoginScreen(
+    onSignUpClick: () -> Unit,
     contentPadding: PaddingValues,
-    loginViewModel: LoginViewModel = viewModel(),
-    onSignUpClick: () -> Unit
+    loginViewModel: LoginViewModel = viewModel()
 ) {
     Surface(
         modifier = Modifier.fillMaxSize().padding(contentPadding)
@@ -189,11 +189,13 @@ fun LightLoginScreenPreview() {
         darkTheme = false
     ) {
         LoginScreen(
-            contentPadding = PaddingValues(),
-            onSignUpClick = {}
+            onSignUpClick = {},
+            contentPadding = PaddingValues()
         )
     }
 }
+
+
 
 @Preview(showBackground = true)
 @Composable
@@ -202,9 +204,8 @@ fun DarkLoginScreenPreview() {
         darkTheme = true
     ) {
         LoginScreen(
-            contentPadding = PaddingValues(),
-            onSignUpClick = {}
-
+            onSignUpClick = {},
+            contentPadding = PaddingValues()
         )
     }
 }
