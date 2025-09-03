@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,6 +53,7 @@ import com.example.kingburguer.viewmodels.SignUpViewModel
 @Composable
 fun SignUpScreen(
     viewModel: SignUpViewModel = viewModel(),
+    onNavigateToHome: () -> Unit,
     onNavigationClick: () -> Unit
 ) {
     Surface(
@@ -87,7 +89,8 @@ fun SignUpScreen(
 
             SignUpContentScreen(
                 modifier = Modifier.padding(top = contentPadding.calculateTopPadding()),
-                viewModel = viewModel
+                viewModel = viewModel,
+                onNavigateToHome = onNavigateToHome
             )
         }
     }
@@ -97,6 +100,7 @@ fun SignUpScreen(
 @Composable
 private fun SignUpContentScreen(
     modifier: Modifier,
+    onNavigateToHome: () -> Unit,
     viewModel: SignUpViewModel
 ) {
     Surface(
@@ -116,6 +120,15 @@ private fun SignUpContentScreen(
                 verticalArrangement = Arrangement.spacedBy(14.dp, Alignment.Top),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
+                LaunchedEffect(key1 = uiState.goToHome) {
+                    if (uiState.goToHome) {
+                        onNavigateToHome()
+                        viewModel.reset()
+                    }
+                }
+
+
 
                 uiState.error?.let { messageError ->
                     KingAlert(
@@ -268,9 +281,10 @@ private fun SignUpContentScreen(
 @Composable
 fun LightSignUpScreenPreview() {
     KingBurguerTheme(dynamicColor = false, darkTheme = false) {
-        SignUpScreen{
-
-        }
+        SignUpScreen(
+            onNavigateToHome = {},
+            onNavigationClick = {}
+        )
     }
 }
 
@@ -278,6 +292,9 @@ fun LightSignUpScreenPreview() {
 @Composable
 fun DarkSignUpScreenPreview() {
     KingBurguerTheme(dynamicColor = false, darkTheme = true) {
-        SignUpScreen{}
+        SignUpScreen(
+            onNavigateToHome = {},
+            onNavigationClick = {}
+        )
     }
 }

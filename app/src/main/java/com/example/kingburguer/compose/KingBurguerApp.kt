@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.kingburguer.compose.home.HomeScreen
 import com.example.kingburguer.compose.login.LoginScreen
 import com.example.kingburguer.compose.signup.SignUpScreen
 import com.example.kingburguer.ui.theme.KingBurguerTheme
@@ -29,15 +30,30 @@ fun KingBurguerNavHost(navController: NavHostController, contentPadding: Padding
         composable(Screen.LOGIN.route) {
             LoginScreen(
                 onSignUpClick = { navController.navigate(Screen.SIGNUP.route) },
-                contentPadding = contentPadding
+                contentPadding = contentPadding,
+                onNavigateToHome = {
+                    navController.navigate(Screen.HOME.route) {
+                        popUpTo(Screen.LOGIN.route) { inclusive = true}
+                    }
+                }
             )
 
 
         }
         composable(Screen.SIGNUP.route) {
-            SignUpScreen() {
-                navController.navigateUp()
-            }
+            SignUpScreen(
+                onNavigationClick = {
+                    navController.navigateUp()
+                },
+                onNavigateToHome = {
+                    navController.navigate(Screen.HOME.route) {
+                        popUpTo(Screen.LOGIN.route) { inclusive = true}
+                    }
+                }
+            )
+        }
+        composable(Screen.HOME.route) {
+            HomeScreen()
         }
     }
 }

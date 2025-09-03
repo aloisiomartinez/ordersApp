@@ -25,6 +25,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,6 +52,7 @@ import com.example.kingburguer.viewmodels.LoginViewModel
 fun LoginScreen(
     onSignUpClick: () -> Unit,
     contentPadding: PaddingValues,
+    onNavigateToHome: () -> Unit,
     loginViewModel: LoginViewModel = viewModel()
 ) {
     Surface(
@@ -62,16 +64,19 @@ fun LoginScreen(
         val uiState by loginViewModel.uiState.collectAsState()
 
         Column(
-
-        ) {
-
-        Column(
             verticalArrangement = Arrangement.spacedBy(14.dp, Alignment.Top),
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .verticalScroll(scrollState)
                 .padding(horizontal = 20.dp)
         ) {
+
+            LaunchedEffect(key1 = uiState.goToHome) {
+                if (uiState.goToHome) {
+                    onNavigateToHome()
+                    loginViewModel.reset()
+                }
+            }
 
             uiState.error?.let { messageError ->
                 KingAlert(
@@ -178,7 +183,7 @@ fun LoginScreen(
             )
         }
     }
-}
+
 
 
 
@@ -190,7 +195,8 @@ fun LightLoginScreenPreview() {
     ) {
         LoginScreen(
             onSignUpClick = {},
-            contentPadding = PaddingValues()
+            contentPadding = PaddingValues(),
+            onNavigateToHome = {}
         )
     }
 }
@@ -205,7 +211,9 @@ fun DarkLoginScreenPreview() {
     ) {
         LoginScreen(
             onSignUpClick = {},
-            contentPadding = PaddingValues()
+            contentPadding = PaddingValues(),
+            onNavigateToHome = {}
+
         )
     }
 }
