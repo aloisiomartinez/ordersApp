@@ -259,7 +259,8 @@ private fun SignUpContentScreen(
 
                 KingButton(
                     text = stringResource(id = R.string.sign_up),
-                    enabled = true
+                    enabled = true,
+                    loading = uiState.isLoading
                 ) {
                     viewModel.send()
                 }

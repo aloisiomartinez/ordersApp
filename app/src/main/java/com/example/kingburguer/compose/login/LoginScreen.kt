@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.internal.isLiveLiteralsEnabled
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -154,7 +155,8 @@ fun LoginScreen(
 
             KingButton(
                 text = stringResource(id = R.string.send),
-                enabled = true
+                enabled = true,
+                loading = uiState.isLoading
             ) {
                 loginViewModel.send()
             }
