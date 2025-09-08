@@ -144,13 +144,14 @@ private fun SignUpContentScreen(
                 KingTextTitle(text = stringResource(R.string.signup))
 
                 KingTextField(
-                    value = "",
+                    value = viewModel.formState.email.field,
                     label = R.string.email,
                     placeholder = R.string.hint_email,
                     keyboardType = KeyboardType.Email,
+                    error = viewModel.formState.email.error,
                     imeAction = ImeAction.Next
                 ) {
-
+                    viewModel.updateEmail(it)
                 }
 
                 KingTextField(
@@ -160,13 +161,12 @@ private fun SignUpContentScreen(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next,
                     error = viewModel.formState.name.error,
-
                 ) {
                     viewModel.updateName(it)
                 }
 
                 KingTextField(
-                    value = "",
+                    value = viewModel.formState.password.field,
                     label = R.string.password,
                     placeholder = R.string.hint_password,
                     keyboardType = KeyboardType.Password,
@@ -196,13 +196,14 @@ private fun SignUpContentScreen(
                             )
                         }
 
-                    }
+                    },
+                    error = viewModel.formState.password.error
                 ) {
-
+                    viewModel.updatePassword(it)
                 }
 
                 KingTextField(
-                    value = "",
+                    value = viewModel.formState.confirmPassword.field,
                     label = R.string.confirm_password,
                     placeholder = R.string.hint_confirm_password,
                     keyboardType = KeyboardType.Password,
@@ -232,9 +233,10 @@ private fun SignUpContentScreen(
                             )
                         }
 
-                    }
+                    },
+                    error = viewModel.formState.confirmPassword.error
                 ) {
-
+                    viewModel.updateConfirmPassword(it)
                 }
 
                 KingTextField(

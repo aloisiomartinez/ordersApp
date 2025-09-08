@@ -8,6 +8,8 @@ data class FieldState (
 )
 
 data class FormState(
+    val email: FieldState = FieldState(),
     val name: FieldState = FieldState(),
-    val nameError: String? = null,
+    val password: FieldState = FieldState(),
+    val confirmPassword: FieldState = FieldState()
 )
