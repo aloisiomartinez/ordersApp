@@ -41,10 +41,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kingburguer.R
-import com.example.kingburguer.compose.login.component.KingAlert
-import com.example.kingburguer.compose.login.component.KingButton
-import com.example.kingburguer.compose.login.component.KingTextField
-import com.example.kingburguer.compose.login.component.KingTextTitle
+import com.example.kingburguer.compose.component.KingAlert
+import com.example.kingburguer.compose.component.KingButton
+import com.example.kingburguer.compose.component.KingTextField
+import com.example.kingburguer.compose.component.KingTextTitle
 import com.example.kingburguer.ui.theme.KingBurguerTheme
 import com.example.kingburguer.viewmodels.SignUpViewModel
 
@@ -145,7 +145,7 @@ private fun SignUpContentScreen(
                 KingTextTitle(text = stringResource(R.string.signup))
 
                 KingTextField(
-                    value = viewModel.email,
+                    value = "",
                     label = R.string.email,
                     placeholder = R.string.hint_email,
                     keyboardType = KeyboardType.Email,
@@ -155,17 +155,19 @@ private fun SignUpContentScreen(
                 }
 
                 KingTextField(
-                    value = viewModel.name,
+                    value = viewModel.formState.name.field,
                     label = R.string.name,
                     placeholder = R.string.hint_name,
                     keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                ) {
+                    imeAction = ImeAction.Next,
+                    error = viewModel.formState.name.error,
 
+                ) {
+                    viewModel.updateName(it)
                 }
 
                 KingTextField(
-                    value = viewModel.password,
+                    value = "",
                     label = R.string.password,
                     placeholder = R.string.hint_password,
                     keyboardType = KeyboardType.Password,
@@ -201,7 +203,7 @@ private fun SignUpContentScreen(
                 }
 
                 KingTextField(
-                    value = viewModel.confirmPassword,
+                    value = "",
                     label = R.string.confirm_password,
                     placeholder = R.string.hint_confirm_password,
                     keyboardType = KeyboardType.Password,
@@ -237,7 +239,7 @@ private fun SignUpContentScreen(
                 }
 
                 KingTextField(
-                    value = viewModel.document,
+                    value = "",
                     label = R.string.document,
                     placeholder = R.string.hint_email,
                     keyboardType = KeyboardType.Number,
@@ -247,7 +249,7 @@ private fun SignUpContentScreen(
                 }
 
                 KingTextField(
-                    value = viewModel.birthday,
+                    value = "",
                     label = R.string.birthday,
                     placeholder = R.string.hint_birthday,
                     keyboardType = KeyboardType.Number,

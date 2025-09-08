@@ -6,6 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kingburguer.compose.login.LoginUiState
+import com.example.kingburguer.compose.signup.FieldState
+import com.example.kingburguer.compose.signup.FormState
+import com.example.kingburguer.compose.signup.SignUpUiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,25 +18,36 @@ import kotlinx.coroutines.launch
 
 class SignUpViewModel: ViewModel() {
 
-    private val _uiState = MutableStateFlow(LoginUiState())
-    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(SignUpUiState())
+    val uiState: StateFlow<SignUpUiState> = _uiState.asStateFlow()
 
-    var email by mutableStateOf("")
-        private set
-    var name by mutableStateOf("")
-        private set
-    var password by mutableStateOf("")
-        private set
-    var confirmPassword by mutableStateOf("")
-        private set
-    var document by mutableStateOf("")
-        private set
-    var birthday by mutableStateOf("")
-        private set
+    var formState by mutableStateOf(FormState())
+
+    fun updateName(newName: String) {
+        if (newName.isBlank()) {
+            formState = formState.copy(
+                name = FieldState(field = newName, error = "Campo não pode ser vazio")
+            )
+            return
+        }
+
+        if (newName.length < 3) {
+            formState = formState.copy(
+                name = FieldState(field = newName, error = "Nome deve ter 3 letras ou mais")
+            )
+            return
+        }
+
+        formState = formState.copy(
+            name = FieldState(field = newName, error = null)
+        )
+
+    }
 
     fun send() {
          _uiState.update {
             it.copy(isLoading = true)
+
         }
 
 
@@ -48,7 +62,7 @@ class SignUpViewModel: ViewModel() {
 
     fun reset() {
         _uiState.update {
-            LoginUiState()
+            SignUpUiState()
         }
     }
 

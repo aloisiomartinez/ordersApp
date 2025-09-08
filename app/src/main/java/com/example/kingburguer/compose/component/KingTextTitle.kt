@@ -1,4 +1,4 @@
-package com.example.kingburguer.compose.login.component
+package com.example.kingburguer.compose.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

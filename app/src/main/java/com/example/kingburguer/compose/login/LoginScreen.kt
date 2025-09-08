@@ -42,10 +42,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kingburguer.R
-import com.example.kingburguer.compose.login.component.KingAlert
-import com.example.kingburguer.compose.login.component.KingButton
-import com.example.kingburguer.compose.login.component.KingTextField
-import com.example.kingburguer.compose.login.component.KingTextTitle
+import com.example.kingburguer.compose.component.KingAlert
+import com.example.kingburguer.compose.component.KingButton
+import com.example.kingburguer.compose.component.KingTextField
+import com.example.kingburguer.compose.component.KingTextTitle
 import com.example.kingburguer.ui.theme.KingBurguerTheme
 import com.example.kingburguer.viewmodels.LoginViewModel
 

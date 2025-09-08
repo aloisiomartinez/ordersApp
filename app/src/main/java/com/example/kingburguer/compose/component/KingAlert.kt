@@ -1,4 +1,4 @@
-package com.example.kingburguer.compose.login.component
+package com.example.kingburguer.compose.component
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BasicAlertDialog
