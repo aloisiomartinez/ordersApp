@@ -65,7 +65,7 @@ fun LoginScreen(
         val uiState by loginViewModel.uiState.collectAsState()
 
         Column(
-            verticalArrangement = Arrangement.spacedBy(14.dp, Alignment.Top),
+            verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .verticalScroll(scrollState)
@@ -141,7 +141,7 @@ fun LoginScreen(
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Checkbox(
@@ -175,7 +175,6 @@ fun LoginScreen(
                 }
             }
             }
-
 
             Image(
                 modifier = Modifier.fillMaxSize(),

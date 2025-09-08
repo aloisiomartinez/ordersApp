@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -117,7 +118,7 @@ private fun SignUpContentScreen(
                 .padding(horizontal = 20.dp)
         ) {
             Column(
-                verticalArrangement = Arrangement.spacedBy(14.dp, Alignment.Top),
+                verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
@@ -127,8 +128,6 @@ private fun SignUpContentScreen(
                         viewModel.reset()
                     }
                 }
-
-
 
                 uiState.error?.let { messageError ->
                     KingAlert(
@@ -258,7 +257,6 @@ private fun SignUpContentScreen(
 
                 }
 
-
                 KingButton(
                     text = stringResource(id = R.string.sign_up),
                     enabled = true,
@@ -266,11 +264,10 @@ private fun SignUpContentScreen(
                 ) {
                     viewModel.send()
                 }
-
             }
 
             Image(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().size(216.dp),
                 alignment = Alignment.BottomCenter,
                 painter = painterResource(R.drawable.cover3),
                 contentDescription = stringResource(id = R.string.hamburguer)

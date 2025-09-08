@@ -3,6 +3,7 @@ package com.example.kingburguer.compose.component
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -25,7 +26,10 @@ fun KingButton(
     loading: Boolean = false,
     onClick: () -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
         Button(
             onClick = onClick,
             enabled = enabled && !loading,

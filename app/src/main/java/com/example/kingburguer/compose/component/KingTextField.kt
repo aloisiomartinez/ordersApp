@@ -40,11 +40,10 @@ fun KingTextField(
 
     OutlinedTextField(
         modifier = modifier
-            .fillMaxWidth()
-            .heightIn(min = 82.dp, max = 82.dp),
+            .fillMaxWidth(),
         onValueChange = onValueChange,
         value = value,
-        singleLine = true,
+        maxLines = 1,
         label = {
             Text(stringResource(id = label))
         },
