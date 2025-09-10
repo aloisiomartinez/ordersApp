@@ -1,5 +1,6 @@
 package com.example.kingburguer.viewmodels
 
+import android.util.Log
 import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.kingburguer.compose.signup.FieldState
 import com.example.kingburguer.compose.signup.FormState
 import com.example.kingburguer.compose.signup.SignUpUiState
+import com.example.kingburguer.validation.Mask
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,6 +26,7 @@ class SignUpViewModel: ViewModel() {
     var formState by mutableStateOf(FormState())
 
     fun updateEmail(newEmail: String) {
+
         if (newEmail.isBlank()) {
             formState = formState.copy(
                 email = FieldState(field = newEmail, error = "Campo E-mail não pode ser vazio")
@@ -31,7 +34,7 @@ class SignUpViewModel: ViewModel() {
             return
         }
 
-        if (isEmailValid(newEmail)) {
+        if (!isEmailValid(newEmail)) {
             formState = formState.copy(
                 email = FieldState(field = newEmail, error = "Digite um E-mail válido")
             )
@@ -100,6 +103,30 @@ class SignUpViewModel: ViewModel() {
 
         formState = formState.copy(
             confirmPassword = FieldState(field = newConfirmPassword, error = null)
+        )
+    }
+
+    fun updateDocument(newDocument: String) {
+        val pattern = "###.###.###-##"
+        val currentDocument = formState.document.field
+        val result = Mask(pattern,currentDocument,  newDocument)
+
+        if (result.isBlank()) {
+            formState = formState.copy(
+                document = FieldState(field = result, error = "Campo não pode ser vazio")
+            )
+            return
+        }
+
+        if (result.length != pattern.length) {
+            formState = formState.copy(
+                document = FieldState(field = result, error = "CPF inválido")
+            )
+            return
+        }
+
+        formState = formState.copy(
+            document = FieldState(field = result, error = null)
         )
     }
 

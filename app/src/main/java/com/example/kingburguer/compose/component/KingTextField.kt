@@ -17,12 +17,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import com.example.kingburguer.R
 import com.example.kingburguer.ui.theme.KingBurguerTheme
+
 
 @Composable
 fun KingTextField(
@@ -36,6 +38,35 @@ fun KingTextField(
     modifier: Modifier = Modifier,
     trailingIcon: @Composable (() -> Unit) ?= null,
     onValueChange: (String) -> Unit,
+) {
+    KingTextField(
+        value = TextFieldValue(value),
+        label,
+        placeholder,
+        keyboardType,
+        imeAction,
+        ofuscate,
+        error,
+        modifier,
+        trailingIcon,
+        onValueChange = {
+            onValueChange(it.text)
+        }
+    )
+}
+
+@Composable
+fun KingTextField(
+    value: TextFieldValue,
+    @StringRes label: Int,
+    @StringRes placeholder: Int,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    imeAction: ImeAction = ImeAction.Next,
+    ofuscate: Boolean = false,
+    error: String? = null,
+    modifier: Modifier = Modifier,
+    trailingIcon: @Composable (() -> Unit) ?= null,
+    onValueChange: (TextFieldValue) -> Unit,
 ) {
 
     OutlinedTextField(

@@ -1,5 +1,6 @@
 package com.example.kingburguer.compose.signup
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,8 +36,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -148,11 +151,11 @@ private fun SignUpContentScreen(
                     label = R.string.email,
                     placeholder = R.string.hint_email,
                     keyboardType = KeyboardType.Email,
-                    error = viewModel.formState.email.error,
-                    imeAction = ImeAction.Next
-                ) {
-                    viewModel.updateEmail(it)
-                }
+                    imeAction = ImeAction.Next,
+                    error = viewModel.formState.email.error
+                    ) {
+                       viewModel.updateEmail(it)
+                 }
 
                 KingTextField(
                     value = viewModel.formState.name.field,
@@ -240,13 +243,19 @@ private fun SignUpContentScreen(
                 }
 
                 KingTextField(
-                    value = "",
+                    value = TextFieldValue(
+                        text = viewModel.formState.document.field,
+                        selection = TextRange(
+                            viewModel.formState.document.field.length
+                        )
+                    ),
                     label = R.string.document,
                     placeholder = R.string.hint_email,
                     keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Next
-                ) {
-
+                    imeAction = ImeAction.Next,
+                    error = viewModel.formState.document.error
+                ) { textFieldValue ->
+                    viewModel.updateDocument(textFieldValue.text)
                 }
 
                 KingTextField(
