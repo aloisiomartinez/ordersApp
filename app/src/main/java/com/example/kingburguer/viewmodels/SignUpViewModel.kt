@@ -17,6 +17,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class SignUpViewModel: ViewModel() {
 
@@ -130,6 +134,52 @@ class SignUpViewModel: ViewModel() {
         )
     }
 
+    fun updateBirthday(newBirthday: String) {
+        val pattern = "##/##/####"
+        val currentBirthday = formState.birthday.field
+        val result = Mask(pattern,currentBirthday,  newBirthday)
+
+        if (result.isBlank()) {
+            formState = formState.copy(
+                birthday = FieldState(field = result, error = "Campo não pode ser vazio")
+            )
+            return
+        }
+
+        // O numero precisa ser igual ao da mascara
+        if (result.length != pattern.length) {
+            formState = formState.copy(
+                birthday = FieldState(field = result, error = "Data de nascimento inválida!")
+            )
+            return
+        }
+
+        // Validar data = 30/02/2020
+        try {
+            SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).run {
+                isLenient = false
+                parse(result)
+            }?.also {
+                val now = Date()
+                if (it.after(now)) {
+                    formState = formState.copy(
+                        birthday = FieldState(field = result, error = "Data de nascimento não pode ser maior que hoje")
+                    )
+                    return
+                }
+            }
+
+            formState = formState.copy(
+                birthday = FieldState(field = result, error = null)
+            )
+
+        } catch (e: ParseException) {
+            formState = formState.copy(
+                birthday = FieldState(field = result, error = "Data de nascimento inválida")
+            )
+        }
+    }
+
     fun send() {
          _uiState.update {
             it.copy(isLoading = true)
@@ -155,10 +205,4 @@ class SignUpViewModel: ViewModel() {
     private fun isEmailValid(email: String): Boolean {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
-
-
 }
-
-
-
-//
