@@ -22,4 +22,17 @@
     <string name="name">Nome</string>
     <string name="hint_name">Digite seu nome</string>
     <string name="back">Voltar</string>
+    <string name="error_email_blank">Campo E-mail não pode ser vazio</string>
+    <string name="error_email_invalid">Digite um E-mail válido</string>
+    <string name="error_name_blank">Campo não pode ser vazio</string>
+    <string name="error_name_invalid">Nome deve ter 3 letras ou mais</string>
+    <string name="error_password_blank">Campo senha não pode ser vazio</string>
+    <string name="error_password_invalid">Senha deve ter 8 caracteres ou mais</string>
+    <string name="error_confirm_password_blank">Campo confirmar senha não pode ser vazio</string>
+    <string name="error_confirm_password_invalid">Senhas estão diferentes</string>
+    <string name="error_document_blank">Campo Documento não pode ser vazio</string>
+    <string name="error_document_invalid">CPF inválido</string>
+    <string name="error_birthday_blank">Campo não pode ser vazio</string>
+    <string name="error_birthday_invalid">Data de nascimento inválida</string>
+    <string name="error_birthday_future_invalid">Data de nascimento não pode ser maior que hoje</string>
 </resources>

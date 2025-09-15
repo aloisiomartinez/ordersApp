@@ -152,7 +152,7 @@ private fun SignUpContentScreen(
                     placeholder = R.string.hint_email,
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next,
-                    error = viewModel.formState.email.error
+                    error = viewModel.formState.email.error?.asString()
                     ) {
                        viewModel.updateEmail(it)
                  }
@@ -163,7 +163,7 @@ private fun SignUpContentScreen(
                     placeholder = R.string.hint_name,
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next,
-                    error = viewModel.formState.name.error,
+                    error = viewModel.formState.name.error?.asString()
                 ) {
                     viewModel.updateName(it)
                 }
@@ -200,7 +200,7 @@ private fun SignUpContentScreen(
                         }
 
                     },
-                    error = viewModel.formState.password.error
+                    error = viewModel.formState.password.error?.asString()
                 ) {
                     viewModel.updatePassword(it)
                 }
@@ -237,7 +237,7 @@ private fun SignUpContentScreen(
                         }
 
                     },
-                    error = viewModel.formState.confirmPassword.error
+                    error = viewModel.formState.confirmPassword.error?.asString()
                 ) {
                     viewModel.updateConfirmPassword(it)
                 }
@@ -253,7 +253,7 @@ private fun SignUpContentScreen(
                     placeholder = R.string.hint_email,
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next,
-                    error = viewModel.formState.document.error
+                    error = viewModel.formState.document.error?.asString()
                 ) { textFieldValue ->
                     viewModel.updateDocument(textFieldValue.text)
                 }
@@ -269,7 +269,7 @@ private fun SignUpContentScreen(
                     placeholder = R.string.hint_birthday,
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done,
-                    error = viewModel.formState.birthday.error
+                    error = viewModel.formState.birthday.error?.asString()
                 ) { textFieldValue ->
                     viewModel.updateBirthday(textFieldValue.text)
                 }
