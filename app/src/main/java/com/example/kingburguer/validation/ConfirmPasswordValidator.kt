@@ -10,7 +10,7 @@ class ConfirmPasswordValidator {
             return ResourceString(R.string.error_confirm_password_blank)
         }
 
-        if (confirmPassword != password) {
+        if (password.isNotBlank() && confirmPassword != password) {
                 return ResourceString(R.string.error_confirm_password_invalid)
         }
         return null

@@ -46,48 +46,78 @@ class SignUpViewModel: ViewModel() {
         val textString = emailValidator.validate(newEmail)
 
         formState = formState.copy(
-            email = FieldState(field = newEmail, error = textString)
+            email = FieldState(field = newEmail, error = textString, isValid = textString == null)
         )
+        updateButton()
     }
 
     fun updateName(newName: String) {
        val textString = nameValidator.validate(newName)
 
         formState = formState.copy(
-            name = FieldState(field = newName, error = textString)
+            name = FieldState(field = newName, error = textString, isValid = textString == null)
         )
+        updateButton()
+
     }
 
     fun updatePassword(newPassword: String) {
-        val textString = passwordValidator.validate(newPassword)
+        var textString = passwordValidator.validate(formState.confirmPassword.field, newPassword)
 
         formState = formState.copy(
-            password = FieldState(field = newPassword, error = textString)
+            password = FieldState(field = newPassword, error = textString, isValid = textString == null)
         )
+
+        textString = confirmPasswordValidator.validate(newPassword, formState.confirmPassword.field)
+        formState = formState.copy(
+            confirmPassword = FieldState(field = formState.confirmPassword.field, error = textString, isValid = textString == null)
+        )
+
+        updateButton()
+
     }
 
     fun updateConfirmPassword(newConfirmPassword: String) {
-        val textString = confirmPasswordValidator.validate(newConfirmPassword, formState.password.field)
+        var textString = confirmPasswordValidator.validate(newConfirmPassword, formState.password.field)
 
         formState = formState.copy(
-            confirmPassword = FieldState(field = newConfirmPassword, error = textString)
+            confirmPassword = FieldState(field = newConfirmPassword, error = textString, isValid = textString == null)
         )
+        textString = passwordValidator.validate(newConfirmPassword, formState.password.field)
+        formState = formState.copy(
+            password = FieldState(field = formState.password.field, error = textString, isValid = textString == null)
+        )
+        updateButton()
+
     }
 
     fun updateDocument(newDocument: String) {
         val textString = documentValidator.validate(formState.document.field, newDocument)
         formState = formState.copy(
-            document = FieldState(field = documentValidator.result, error = textString)
+            document = FieldState(field = documentValidator.result, error = textString, isValid = textString == null)
         )
+        updateButton()
+
     }
 
     fun updateBirthday(newBirthday: String) {
         val textString = birthdayValidator.validate(formState.birthday.field, newBirthday)
 
         formState = formState.copy(
-            birthday = FieldState(field = birthdayValidator.result, error = textString)
+            birthday = FieldState(field = birthdayValidator.result, error = textString, isValid = textString == null)
         )
+        updateButton()
 
+    }
+
+    private fun updateButton() {
+        val formIsValid = with(formState) {
+            email.isValid && name.isValid && password.isValid && confirmPassword.isValid && document.isValid && birthday.isValid
+        }
+
+        formState = formState.copy(
+            formIsValid = formIsValid
+        )
     }
 
     fun send() {
