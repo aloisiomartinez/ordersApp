@@ -239,7 +239,7 @@ private fun SignUpContentScreen(
                     },
                     error = viewModel.formState.confirmPassword.error?.asString()
                 ) {
-                    viewModel.updateConfirmPassword(it)
+                    viewModel.updatePasswordConfirm(it)
                 }
 
                 KingTextField(
@@ -276,7 +276,7 @@ private fun SignUpContentScreen(
 
                 KingButton(
                     text = stringResource(id = R.string.sign_up),
-                    enabled = viewModel.formState.formIsValid,
+                    enabled = true, //viewModel.formState.formIsValid,
                     loading = uiState.isLoading
                 ) {
                     viewModel.send()

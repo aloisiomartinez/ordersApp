@@ -61,6 +61,12 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.6.8") // Opcional, para mais ícones
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
 
+
+    // HTTP
+    implementation(libs.retrofit2)
+    implementation(libs.retrofit2.converter.gson)
+    implementation(libs.okttp3.logging.interceptor)
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -69,4 +75,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+
+
 }

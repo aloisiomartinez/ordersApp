@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.kingburguer.api.KingBurguerService
 import com.example.kingburguer.compose.signup.FieldState
 import com.example.kingburguer.compose.signup.FormState
 import com.example.kingburguer.compose.signup.SignUpUiState
@@ -23,12 +24,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class SignUpViewModel: ViewModel() {
+class SignUpViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(SignUpUiState())
     val uiState: StateFlow<SignUpUiState> = _uiState.asStateFlow()
@@ -42,9 +44,12 @@ class SignUpViewModel: ViewModel() {
     private val documentValidator = DocumentValidator()
     private val birthdayValidator = BirthdayValidator()
 
+    fun reset() {
+        _uiState.update { SignUpUiState() }
+    }
+
     fun updateEmail(newEmail: String) {
         val textString = emailValidator.validate(newEmail)
-
         formState = formState.copy(
             email = FieldState(field = newEmail, error = textString, isValid = textString == null)
         )
@@ -52,67 +57,88 @@ class SignUpViewModel: ViewModel() {
     }
 
     fun updateName(newName: String) {
-       val textString = nameValidator.validate(newName)
-
+        val textString = nameValidator.validate(newName)
         formState = formState.copy(
             name = FieldState(field = newName, error = textString, isValid = textString == null)
         )
         updateButton()
-
     }
 
     fun updatePassword(newPassword: String) {
         var textString = passwordValidator.validate(formState.confirmPassword.field, newPassword)
-
         formState = formState.copy(
-            password = FieldState(field = newPassword, error = textString, isValid = textString == null)
+            password = FieldState(
+                field = newPassword,
+                error = textString,
+                isValid = textString == null
+            )
         )
-
         textString = confirmPasswordValidator.validate(newPassword, formState.confirmPassword.field)
         formState = formState.copy(
-            confirmPassword = FieldState(field = formState.confirmPassword.field, error = textString, isValid = textString == null)
+            confirmPassword = FieldState(
+                field = formState.confirmPassword.field,
+                error = textString,
+                isValid = textString == null
+            )
         )
 
         updateButton()
-
     }
 
-    fun updateConfirmPassword(newConfirmPassword: String) {
-        var textString = confirmPasswordValidator.validate(newConfirmPassword, formState.password.field)
+    fun updatePasswordConfirm(confirmPassword: String) {
+        var textString =
+            confirmPasswordValidator.validate(formState.password.field, confirmPassword)
+        formState = formState.copy(
+            confirmPassword = FieldState(
+                field = confirmPassword,
+                error = textString,
+                isValid = textString == null
+            )
+        )
+        textString = passwordValidator.validate(confirmPassword, formState.password.field)
+        formState = formState.copy(
+            password = FieldState(
+                field = formState.password.field,
+                error = textString,
+                isValid = textString == null
+            )
+        )
 
-        formState = formState.copy(
-            confirmPassword = FieldState(field = newConfirmPassword, error = textString, isValid = textString == null)
-        )
-        textString = passwordValidator.validate(newConfirmPassword, formState.password.field)
-        formState = formState.copy(
-            password = FieldState(field = formState.password.field, error = textString, isValid = textString == null)
-        )
         updateButton()
-
     }
 
     fun updateDocument(newDocument: String) {
         val textString = documentValidator.validate(formState.document.field, newDocument)
         formState = formState.copy(
-            document = FieldState(field = documentValidator.result, error = textString, isValid = textString == null)
+            document = FieldState(
+                field = documentValidator.result,
+                error = textString,
+                isValid = textString == null
+            )
         )
         updateButton()
-
     }
 
     fun updateBirthday(newBirthday: String) {
         val textString = birthdayValidator.validate(formState.birthday.field, newBirthday)
-
         formState = formState.copy(
-            birthday = FieldState(field = birthdayValidator.result, error = textString, isValid = textString == null)
+            birthday = FieldState(
+                field = birthdayValidator.result,
+                error = textString,
+                isValid = textString == null
+            )
         )
         updateButton()
-
     }
 
     private fun updateButton() {
         val formIsValid = with(formState) {
-            email.isValid && name.isValid && password.isValid && confirmPassword.isValid && document.isValid && birthday.isValid
+            email.isValid &&
+                    name.isValid &&
+                    password.isValid &&
+                    confirmPassword.isValid &&
+                    document.isValid &&
+                    birthday.isValid
         }
 
         formState = formState.copy(
@@ -121,23 +147,29 @@ class SignUpViewModel: ViewModel() {
     }
 
     fun send() {
-         _uiState.update {
-            it.copy(isLoading = true)
+        _uiState.update { it.copy(isLoading = true) }
 
-        }
-
-        // Simulação de latencia de rede/ atraso de chamada
         viewModelScope.launch {
-            delay(3000)
-            _uiState.update {
-                it.copy(isLoading = false, goToHome = true)
-            }
-        }
-    }
 
-    fun reset() {
-        _uiState.update {
-            SignUpUiState()
+//            Log.i("Teste", "Response status: ${response.code()}")
+//            Log.i("Teste", "Response body: ${response.body()}")
+//            Log.i("Teste", "Response body error: ${response.errorBody()}")
+//            Log.i("Teste", "Response success: ${response.isSuccessful}")
+
+            try {
+                val service = KingBurguerService.create()
+                val body = service.getTest()
+                //
+            } catch (e: HttpException) { // >= 400
+                Log.i("Teste", "Response status: ${e.code()}")
+                val content = e.response()?.errorBody()?.string()
+
+                Log.i("Teste", "Response body error: $content")
+                _uiState.update { it.copy(isLoading = false, error = content) }
+            }
+
+//            _uiState.update { it.copy(isLoading = false, goToHome = true) }
+
         }
     }
 
