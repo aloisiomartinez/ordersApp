@@ -154,12 +154,16 @@ class SignUpViewModel : ViewModel() {
 
             try {
                 with(formState) {
+                    val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(birthday.field)
+
+                    val dateFormatted = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date!!)
+
                     val userRequest = UserRequest(
                         name = name.field,
                         email = email.field,
                         password = password.field,
                         document = document.field,
-                        birthday = "2000-02-20"
+                        birthday = dateFormatted
                     )
                     val service = KingBurguerService.create()
                     val body = service.postUser(userRequest)
