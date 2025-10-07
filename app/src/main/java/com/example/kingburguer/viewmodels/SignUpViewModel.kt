@@ -11,6 +11,7 @@ import com.example.kingburguer.api.KingBurguerService
 import com.example.kingburguer.compose.signup.FieldState
 import com.example.kingburguer.compose.signup.FormState
 import com.example.kingburguer.compose.signup.SignUpUiState
+import com.example.kingburguer.data.UserRequest
 import com.example.kingburguer.validation.BirthdayValidator
 import com.example.kingburguer.validation.ConfirmPasswordValidator
 import com.example.kingburguer.validation.DocumentValidator
@@ -151,16 +152,22 @@ class SignUpViewModel : ViewModel() {
 
         viewModelScope.launch {
 
-//            Log.i("Teste", "Response status: ${response.code()}")
-//            Log.i("Teste", "Response body: ${response.body()}")
-//            Log.i("Teste", "Response body error: ${response.errorBody()}")
-//            Log.i("Teste", "Response success: ${response.isSuccessful}")
-
             try {
-                val service = KingBurguerService.create()
-                val body = service.getTest()
-                //
-            } catch (e: HttpException) { // >= 400
+                with(formState) {
+                    val userRequest = UserRequest(
+                        name = name.field,
+                        email = email.field,
+                        password = password.field,
+                        document = document.field,
+                        birthday = "2000-02-20"
+                    )
+                    val service = KingBurguerService.create()
+                    val body = service.postUser(userRequest)
+
+                    Log.i("Teste", "contest is $body")
+                }
+
+            } catch (e: HttpException) {
                 Log.i("Teste", "Response status: ${e.code()}")
                 val content = e.response()?.errorBody()?.string()
 

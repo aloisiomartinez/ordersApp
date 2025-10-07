@@ -1,22 +1,23 @@
 package com.example.kingburguer.api
 
+import com.example.kingburguer.data.UserRequest
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 
 interface KingBurguerService {
 
-    @GET("kingburguer")
-    suspend fun getTest(): String
-
-    //suspend fun getTest(): Response<String>
+    @POST("users")
+    suspend fun postUser(@Body userRequest: UserRequest): String
 
     companion object {
 
-        private const val BASE_URL = "https://hades.tiagoaguiar.co/"
+        private const val BASE_URL = "https://hades.tiagoaguiar.co/kingburguer/"
 
         fun create(): KingBurguerService {
             val logger = HttpLoggingInterceptor().apply {
