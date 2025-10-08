@@ -56,8 +56,8 @@ import com.example.kingburguer.viewmodels.SignUpViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
-    viewModel: SignUpViewModel = viewModel(),
-    onNavigateToHome: () -> Unit,
+    viewModel: SignUpViewModel = viewModel(factory = SignUpViewModel.factory),
+    onNavigateToLogin: () -> Unit,
     onNavigationClick: () -> Unit
 ) {
     Surface(
@@ -94,7 +94,7 @@ fun SignUpScreen(
             SignUpContentScreen(
                 modifier = Modifier.padding(top = contentPadding.calculateTopPadding()),
                 viewModel = viewModel,
-                onNavigateToHome = onNavigateToHome
+                onNavigateToLogin = onNavigateToLogin
             )
         }
     }
@@ -104,7 +104,7 @@ fun SignUpScreen(
 @Composable
 private fun SignUpContentScreen(
     modifier: Modifier,
-    onNavigateToHome: () -> Unit,
+    onNavigateToLogin: () -> Unit,
     viewModel: SignUpViewModel
 ) {
     Surface(
@@ -125,12 +125,20 @@ private fun SignUpContentScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                LaunchedEffect(key1 = uiState.goToHome) {
-                    if (uiState.goToHome) {
-                        onNavigateToHome()
-                        viewModel.reset()
-                    }
+                if (uiState.goToLogin) {
+                        KingAlert(
+                            onDismissRequest = {},
+                            onConfirmation = {
+                                onNavigateToLogin()
+                                viewModel.reset()
+                            },
+                            dialogTitle = stringResource(R.string.app_name),
+                            dialogText = stringResource(R.string.user_created),
+                            icon = Icons.Filled.Info
+                        )
+
                 }
+
 
                 uiState.error?.let { messageError ->
                     KingAlert(
@@ -276,7 +284,7 @@ private fun SignUpContentScreen(
 
                 KingButton(
                     text = stringResource(id = R.string.sign_up),
-                    enabled = true, //viewModel.formState.formIsValid,
+                    enabled = viewModel.formState.formIsValid,
                     loading = uiState.isLoading
                 ) {
                     viewModel.send()
@@ -299,7 +307,7 @@ private fun SignUpContentScreen(
 fun LightSignUpScreenPreview() {
     KingBurguerTheme(dynamicColor = false, darkTheme = false) {
         SignUpScreen(
-            onNavigateToHome = {},
+            onNavigateToLogin = {},
             onNavigationClick = {}
         )
     }
@@ -310,7 +318,7 @@ fun LightSignUpScreenPreview() {
 fun DarkSignUpScreenPreview() {
     KingBurguerTheme(dynamicColor = false, darkTheme = true) {
         SignUpScreen(
-            onNavigateToHome = {},
+            onNavigateToLogin = {},
             onNavigationClick = {}
         )
     }

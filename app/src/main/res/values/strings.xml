@@ -35,4 +35,5 @@
     <string name="error_birthday_blank">Campo não pode ser vazio</string>
     <string name="error_birthday_invalid">Data de nascimento inválida</string>
     <string name="error_birthday_future_invalid">Data de nascimento não pode ser maior que hoje</string>
+    <string name="user_created">Usuário criado com sucesso!\n</string>
 </resources>

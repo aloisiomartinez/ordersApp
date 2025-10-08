@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.kingburguer.api.KingBurguerService
 import com.example.kingburguer.compose.signup.FieldState
 import com.example.kingburguer.compose.signup.FormState
@@ -33,7 +35,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class SignUpViewModel : ViewModel() {
+class SignUpViewModel(
+    private val repository: KingBurguerRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SignUpUiState())
     val uiState: StateFlow<SignUpUiState> = _uiState.asStateFlow()
@@ -156,25 +160,23 @@ class SignUpViewModel : ViewModel() {
 
                 with(formState) {
                     val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(birthday.field)
-
                     val dateFormatted = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date!!)
+                    val documentFormatted = document.field.filter { it.isDigit() }
 
                     val userRequest = UserRequest(
                         name = name.field,
                         email = email.field,
                         password = password.field,
-                        document = document.field,
+                        document = documentFormatted,
                         birthday = dateFormatted
                     )
 
-                    val service = KingBurguerService.create()
 
-                    val repository = KingBurguerRepository(service)
                     val result = repository.postUser(userRequest)
 
                     when(result) {
                         is UserCreateResponse.Sucess -> {
-                            _uiState.update { it.copy(isLoading = false, goToHome = true) }
+                            _uiState.update { it.copy(isLoading = false, goToLogin = true) }
 
                         }
                         is UserCreateResponse.ErrorAuth -> {
@@ -188,7 +190,18 @@ class SignUpViewModel : ViewModel() {
 
             }
         }
+
+    companion object {
+      val factory = viewModelFactory {
+          initializer {
+              val service = KingBurguerService.create()
+              val repository = KingBurguerRepository(service)
+              SignUpViewModel(repository)
+          }
+      }
     }
+
+}
 
 
 

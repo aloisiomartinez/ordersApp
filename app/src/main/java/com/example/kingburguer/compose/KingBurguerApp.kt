@@ -45,10 +45,8 @@ fun KingBurguerNavHost(navController: NavHostController, contentPadding: Padding
                 onNavigationClick = {
                     navController.navigateUp()
                 },
-                onNavigateToHome = {
-                    navController.navigate(Screen.HOME.route) {
-                        popUpTo(Screen.LOGIN.route) { inclusive = true}
-                    }
+                onNavigateToLogin = {
+                    navController.navigateUp()
                 }
             )
         }
