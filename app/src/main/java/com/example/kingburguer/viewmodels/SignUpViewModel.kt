@@ -11,6 +11,8 @@ import com.example.kingburguer.api.KingBurguerService
 import com.example.kingburguer.compose.signup.FieldState
 import com.example.kingburguer.compose.signup.FormState
 import com.example.kingburguer.compose.signup.SignUpUiState
+import com.example.kingburguer.data.KingBurguerRepository
+import com.example.kingburguer.data.UserCreateResponse
 import com.example.kingburguer.data.UserRequest
 import com.example.kingburguer.validation.BirthdayValidator
 import com.example.kingburguer.validation.ConfirmPasswordValidator
@@ -152,7 +154,6 @@ class SignUpViewModel : ViewModel() {
 
         viewModelScope.launch {
 
-            try {
                 with(formState) {
                     val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(birthday.field)
 
@@ -165,24 +166,29 @@ class SignUpViewModel : ViewModel() {
                         document = document.field,
                         birthday = dateFormatted
                     )
-                    val service = KingBurguerService.create()
-                    val body = service.postUser(userRequest)
 
-                    Log.i("Teste", "contest is $body")
+                    val service = KingBurguerService.create()
+
+                    val repository = KingBurguerRepository(service)
+                    val result = repository.postUser(userRequest)
+
+                    when(result) {
+                        is UserCreateResponse.Sucess -> {
+                            _uiState.update { it.copy(isLoading = false, goToHome = true) }
+
+                        }
+                        is UserCreateResponse.ErrorAuth -> {
+                            _uiState.update { it.copy(isLoading = false, error = result.detail.message) }
+                        }
+                        is UserCreateResponse.Error -> {
+                            _uiState.update { it.copy(isLoading = false, error = result.detail) }
+                        }
+                    }
                 }
 
-            } catch (e: HttpException) {
-                Log.i("Teste", "Response status: ${e.code()}")
-                val content = e.response()?.errorBody()?.string()
-
-                Log.i("Teste", "Response body error: $content")
-                _uiState.update { it.copy(isLoading = false, error = content) }
             }
-
-//            _uiState.update { it.copy(isLoading = false, goToHome = true) }
-
         }
     }
 
 
-}
+
