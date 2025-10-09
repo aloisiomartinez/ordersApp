@@ -54,7 +54,7 @@ fun LoginScreen(
     onSignUpClick: () -> Unit,
     contentPadding: PaddingValues,
     onNavigateToHome: () -> Unit,
-    loginViewModel: LoginViewModel = viewModel()
+    loginViewModel: LoginViewModel = viewModel(factory = LoginViewModel.factory)
 ) {
     Surface(
         modifier = Modifier.fillMaxSize().padding(contentPadding)
@@ -94,22 +94,24 @@ fun LoginScreen(
             KingTextTitle(text = stringResource(R.string.login))
 
             KingTextField(
-                value = loginViewModel.email,
+                value = loginViewModel.formState.email.field,
                 label = R.string.email,
                 placeholder = R.string.hint_email,
                 keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Next,
+                error = loginViewModel.formState.email.error?.asString()
             ) {
-
+                loginViewModel.updateEmail(it)
             }
 
             KingTextField(
-                value = loginViewModel.password,
+                value = loginViewModel.formState.password.field,
                 label = R.string.password,
                 placeholder = R.string.hint_password,
                 keyboardType = KeyboardType.Password,
                 ofuscate = passwordHidden,
                 imeAction = ImeAction.Done,
+                error = loginViewModel.formState.password.error?.asString(),
                 trailingIcon = {
                     IconButton(
                         onClick = {
@@ -136,6 +138,7 @@ fun LoginScreen(
 
                 }
             ) {
+                loginViewModel.updatePassword(it)
 
             }
 
@@ -145,8 +148,10 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Checkbox(
-                    checked = true,
-                    onCheckedChange = {}
+                    checked = loginViewModel.formState.rememberMe,
+                    onCheckedChange = {
+                        loginViewModel.updateRememberMe(it)
+                    }
                 )
 
                 Text(stringResource(id = R.string.remember_me))
@@ -155,7 +160,7 @@ fun LoginScreen(
 
             KingButton(
                 text = stringResource(id = R.string.send),
-                enabled = true,
+                enabled = loginViewModel.formState.formIsValid,
                 loading = uiState.isLoading
             ) {
                 loginViewModel.send()

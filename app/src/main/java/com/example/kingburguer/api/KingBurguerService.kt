@@ -1,6 +1,7 @@
 package com.example.kingburguer.api
 
 import com.example.kingburguer.BuildConfig
+import com.example.kingburguer.data.LoginRequest
 import com.example.kingburguer.data.UserRequest
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
@@ -18,6 +19,12 @@ interface KingBurguerService {
     @POST("users")
     suspend fun postUser(
         @Body userRequest: UserRequest,
+        @Header("x-secret-key") secretKey: String = BuildConfig.X_SECRET_KEY
+    ): Response<ResponseBody>
+
+    @POST("auth/login")
+    suspend fun login(
+        @Body loginRequest: LoginRequest,
         @Header("x-secret-key") secretKey: String = BuildConfig.X_SECRET_KEY
     ): Response<ResponseBody>
 
