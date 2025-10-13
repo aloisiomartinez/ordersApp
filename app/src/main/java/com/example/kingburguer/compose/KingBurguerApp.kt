@@ -25,20 +25,18 @@ fun KingBurguerApp(
 fun KingBurguerNavHost(navController: NavHostController, contentPadding: PaddingValues) {
     NavHost(
         navController = navController,
-        startDestination = Screen.LOGIN.route
+        startDestination = Screen.MAIN.route
     ) {
         composable(Screen.LOGIN.route) {
             LoginScreen(
                 onSignUpClick = { navController.navigate(Screen.SIGNUP.route) },
                 contentPadding = contentPadding,
                 onNavigateToHome = {
-                    navController.navigate(Screen.HOME.route) {
-                        popUpTo(Screen.LOGIN.route) { inclusive = true}
+                    navController.navigate(Screen.MAIN.route) {
+                        popUpTo(Screen.MAIN.route) { inclusive = true}
                     }
                 }
             )
-
-
         }
         composable(Screen.SIGNUP.route) {
             SignUpScreen(
@@ -50,9 +48,10 @@ fun KingBurguerNavHost(navController: NavHostController, contentPadding: Padding
                 }
             )
         }
-        composable(Screen.HOME.route) {
+        composable(Screen.MAIN.route) {
             MainScreen()
         }
+
     }
 }
 
