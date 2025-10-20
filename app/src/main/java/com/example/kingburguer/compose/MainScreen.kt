@@ -1,4 +1,4 @@
-package com.example.kingburguer.compose.home
+package com.example.kingburguer.compose
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,7 +30,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.kingburguer.R
-import com.example.kingburguer.compose.Screen
+import com.example.kingburguer.compose.home.HomeScreen
 import com.example.kingburguer.ui.theme.KingBurguerTheme
 
 @Composable
@@ -155,16 +155,6 @@ data class NavigationItem(
 
 
 
-@Composable
-fun HomeScreen(
-    modifier: Modifier
-) {
-   Surface(
-       modifier = modifier.fillMaxSize()
-   ) {
-       Text("HOME SCREEN", style = MaterialTheme.typography.headlineLarge)
-   }
-}
 
 @Composable
 fun Couponcreen(

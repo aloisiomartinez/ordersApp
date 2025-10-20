@@ -7,7 +7,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.kingburguer.compose.home.MainScreen
 import com.example.kingburguer.compose.login.LoginScreen
 import com.example.kingburguer.compose.signup.SignUpScreen
 import com.example.kingburguer.ui.theme.KingBurguerTheme
