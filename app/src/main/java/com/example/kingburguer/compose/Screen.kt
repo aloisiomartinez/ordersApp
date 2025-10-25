@@ -8,5 +8,6 @@ enum class Screen(val route: String) {
     // Rotas da tela Principal
     HOME("home"),
     COUPON("coupon"),
-    PROFILE("profile")
+    PROFILE("profile"),
+    PRODUCT("product")
 }

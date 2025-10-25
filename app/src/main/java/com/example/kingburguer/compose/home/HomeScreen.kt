@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,10 +45,12 @@ import com.example.kingburguer.ui.theme.KingBurguerTheme
 import com.example.kingburguer.ui.theme.Orange600
 
 data class Product(
+    val id: Int,
     val name: String,
     @DrawableRes val picture: Int = R.drawable.example,
     val price: Double = 19.0
 )
+
 data class Category(
     val name: String,
     val products: List<Product>
@@ -56,28 +59,29 @@ data class Category(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onProductClicked: (Int) -> Unit
 ) {
     val categories = listOf(
         Category("Vegetariano", listOf(
-            Product("Combo V1"),
-            Product("Combo V2"),
-            Product("Combo V3")
+            Product(1,"Combo V1"),
+            Product(2,"Combo V2"),
+            Product(3,"Combo V3")
             )
         ),
         Category("Bovino", listOf(
-            Product("Combo B1 com nom super grande e que não cabe na tela"),
-            Product("Combo B2"),
-            Product("Combo B3"),
-            Product("Combo B4"),
-            Product("Combo B5"),
-            Product("Combo B6")
+            Product(4,"Combo B1 com nom super grande e que não cabe na tela"),
+            Product(5,"Combo B2"),
+            Product(6,"Combo B3"),
+            Product(7,"Combo B4"),
+            Product(8,"Combo B5"),
+            Product(9,"Combo B6")
             )
         ),
         Category("Sobremesa", listOf(
-            Product("Combo S1"),
-            Product("Combo S2"),
-            Product("Combo S3")
+            Product(10,"Combo S1"),
+            Product(11,"Combo S2"),
+            Product(12,"Combo S3")
             )
         )
     )
@@ -96,7 +100,7 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .height(230.dp)
                     .background(Color.Blue),
-                painter = painterResource(R.drawable.cover3),
+                painter = painterResource(R.drawable.highlight),
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )
@@ -157,7 +161,10 @@ fun HomeScreen(
                                         .border(
                                             BorderStroke(0.3.dp, Color.Gray),
                                             RoundedCornerShape(8.dp)
-                                        ),
+                                        )
+                                        .clickable {
+                                            onProductClicked(product.id)
+                                        },
                                     painter = painterResource(product.picture),
                                     contentDescription = product.name
                                 )
@@ -201,9 +208,7 @@ fun LightHomeScreenPreview() {
     KingBurguerTheme(
         darkTheme = false
     ) {
-        HomeScreen(
-
-        )
+        HomeScreen() {}
     }
 }
 
@@ -215,8 +220,6 @@ fun DarkHomeScreenPreview() {
     KingBurguerTheme(
         darkTheme = true
     ) {
-        HomeScreen(
-
-        )
+        HomeScreen() {}
     }
 }

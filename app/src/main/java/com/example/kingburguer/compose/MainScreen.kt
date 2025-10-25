@@ -16,32 +16,89 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.filled.PowerSettingsNew
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.kingburguer.R
 import com.example.kingburguer.compose.home.HomeScreen
+import com.example.kingburguer.compose.product.ProductScreen
 import com.example.kingburguer.ui.theme.KingBurguerTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
+    var titleTopBarId by remember { mutableIntStateOf(R.string.menu_home) }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    LaunchedEffect(currentRoute) {
+        if (currentRoute == Screen.HOME.route) {
+            titleTopBarId = R.string.menu_home
+        }
+    }
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Scaffold(
-            topBar = {},
+            topBar = {
+                TopAppBar(
+                    modifier = Modifier.padding(top = 8.dp),
+                    title = {
+                        Text(stringResource(titleTopBarId), )
+
+                    },
+                    navigationIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.logo),
+                            contentDescription = stringResource(R.string.app_name),
+                            tint = Color.Unspecified
+                        )
+                    },
+                    actions = {
+                        IconButton(onClick = {}) {
+                            Icon(imageVector = Icons.Filled.Person, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface)
+                        }
+                        IconButton(onClick = {}) {
+                            Icon(imageVector = Icons.Filled.PowerSettingsNew, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface)
+                        }
+                    },
+                    backgroundColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+//                    colors = TopAppBarDefaults.topAppBarColors(
+//                        containerColor = MaterialTheme.colorScheme.primary,
+//                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+//                        navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+//                    )
+                )
+            },
             bottomBar = {
-                MainBottomNavigation(navController)
+                MainBottomNavigation(navController) { titleId ->
+                    titleTopBarId = titleId
+                }
             }
         ) { contentPadding ->
             MainContentScreen(navController,contentPadding)
@@ -66,8 +123,11 @@ fun MainContentScreen(
                         top = contentPadding.calculateTopPadding(),
                         bottom = contentPadding.calculateBottomPadding()
                     )
-            )
+            ) { productId ->
+                navController.navigate("${Screen.PRODUCT.route}/$productId")
+            }
         }
+
         composable(Screen.COUPON.route) {
             Couponcreen(
                 modifier = Modifier
@@ -77,8 +137,26 @@ fun MainContentScreen(
                     )
             )
         }
+
         composable(Screen.PROFILE.route) {
             ProfileScreen(
+                modifier = Modifier
+                    .padding(
+                        top = contentPadding.calculateTopPadding(),
+                        bottom = contentPadding.calculateBottomPadding()
+                    )
+            )
+        }
+
+        composable(
+            route = "${Screen.PRODUCT.route}/{productId}",
+            arguments = listOf(
+                navArgument("productId") {
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            ProductScreen(
                 modifier = Modifier
                     .padding(
                         top = contentPadding.calculateTopPadding(),
@@ -91,7 +169,8 @@ fun MainContentScreen(
 
 @Composable
 fun MainBottomNavigation(
-    navController: NavHostController
+    navController: NavHostController,
+    onNavigationChanged: (Int) -> Unit
 ) {
     val navigationItems = listOf(
         NavigationItem(
@@ -132,6 +211,7 @@ fun MainBottomNavigation(
                             launchSingleTop = true
                             restoreState = true
                         }
+                        onNavigationChanged(item.title)
                     }
                 },
                 icon = {
