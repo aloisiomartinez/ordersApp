@@ -21,13 +21,14 @@ import com.example.kingburguer.ui.theme.KingBurguerTheme
 
 @Composable
 fun KingButton(
+    modifier: Modifier = Modifier,
     text: String,
     enabled: Boolean = true,
     loading: Boolean = false,
     onClick: () -> Unit
 ) {
     Box(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
         Button(
@@ -59,19 +60,19 @@ fun KingButtonPreview() {
     KingBurguerTheme(dynamicColor = false) {
         Column {
             KingButton(
-                "Ola Mundo",
+                text ="Ola Mundo",
                 enabled = true
             ) {}
             KingButton(
-                "Ola Mundo",
+                text = "Ola Mundo",
                 enabled = false
             ) {}
             KingButton(
-                "Ola Mundo",
+                text = "Ola Mundo",
                 loading = true
             ) {}
             KingButton(
-                "Ola Mundo",
+                text = "Ola Mundo",
                 enabled = false
             ) {}
         }
