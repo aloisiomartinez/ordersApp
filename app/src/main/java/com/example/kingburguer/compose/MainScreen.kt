@@ -46,6 +46,7 @@ import androidx.navigation.navArgument
 import com.example.kingburguer.R
 import com.example.kingburguer.compose.home.HomeScreen
 import com.example.kingburguer.compose.product.ProductScreen
+import com.example.kingburguer.compose.profile.ProfileScreen
 import com.example.kingburguer.ui.theme.KingBurguerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +67,6 @@ fun MainScreen() {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    modifier = Modifier.padding(top = 8.dp),
                     title = {
                         Text(stringResource(titleTopBarId), )
 
@@ -244,17 +244,6 @@ fun Couponcreen(
         modifier = modifier.fillMaxSize()
     ) {
         Text("COUPON SCREEN", style = MaterialTheme.typography.headlineLarge)
-    }
-}
-
-@Composable
-fun ProfileScreen(
-    modifier: Modifier
-) {
-    Surface(
-        modifier = modifier.fillMaxSize()
-    ) {
-        Text("PROFILE SCREEN", style = MaterialTheme.typography.headlineLarge)
     }
 }
 
