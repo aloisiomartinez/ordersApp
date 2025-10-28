@@ -44,10 +44,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.kingburguer.R
+import com.example.kingburguer.compose.coupon.CouponScreen
 import com.example.kingburguer.compose.home.HomeScreen
 import com.example.kingburguer.compose.product.ProductScreen
 import com.example.kingburguer.compose.profile.ProfileScreen
 import com.example.kingburguer.ui.theme.KingBurguerTheme
+import com.example.kingburguer.viewmodels.Coupon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -129,7 +131,7 @@ fun MainContentScreen(
         }
 
         composable(Screen.COUPON.route) {
-            Couponcreen(
+            CouponScreen(
                 modifier = Modifier
                     .padding(
                         top = contentPadding.calculateTopPadding(),
@@ -235,17 +237,6 @@ data class NavigationItem(
 
 
 
-
-@Composable
-fun Couponcreen(
-    modifier: Modifier
-) {
-    Surface(
-        modifier = modifier.fillMaxSize()
-    ) {
-        Text("COUPON SCREEN", style = MaterialTheme.typography.headlineLarge)
-    }
-}
 
 
 @Preview(showBackground = true)
