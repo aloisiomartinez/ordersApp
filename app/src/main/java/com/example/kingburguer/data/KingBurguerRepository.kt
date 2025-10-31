@@ -9,7 +9,7 @@ class KingBurguerRepository(
 ) {
 
     // "get"
-    val textFlow = localStorage.userCredentialsFlow
+    suspend fun fetchInitialCredentials() = localStorage.fetchInitialUserCredentials()
 
     suspend fun postUser(userRequest: UserRequest): UserCreateResponse {
         val response = service.postUser(userRequest)

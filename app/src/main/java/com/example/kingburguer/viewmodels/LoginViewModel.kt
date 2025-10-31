@@ -42,14 +42,6 @@ class LoginViewModel(
     private val emailValidator = EmailValidator()
     private val passwordValidator = PasswordValidator()
 
-    init {
-        viewModelScope.launch {
-            repository.textFlow.collect { value ->
-                Log.i("teste", value.toString())
-            }
-        }
-    }
-
     fun updateEmail(newEmail: String) {
         val textString = emailValidator.validate(newEmail)
         formState = formState.copy(

@@ -1,12 +1,14 @@
 package com.example.kingburguer.data
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 private const val USER_CREDENTIALS_NAME = "user_credentials"
@@ -19,18 +21,14 @@ class KingBurguerLocalStorage(
     private val dataStore: DataStore<Preferences> = context.dataStore
 
     val userCredentialsFlow = dataStore.data.map { preferences ->
-        val expires = preferences[EXPIRES_TIMESTAMP] ?: 0
-        val accessToken = preferences[ACCESS_TOKEN] ?: ""
-        val refreshToken = preferences[REFRESH_TOKEN] ?: ""
-        val tokenType = preferences[TOKEN_TYPE] ?: ""
+        mapUserCredentials(preferences)
+    }
 
-        UserCredentials(
-            accessToken,
-            refreshToken,
-            expires,
-            tokenType
-        )
-
+    suspend fun fetchInitialUserCredentials(): UserCredentials {
+        val pref = dataStore.data.first().toPreferences()
+        val userCredentials =  mapUserCredentials(pref)
+        Log.d("KingBurguerLocalStorage", "Fetched UserCredentials: $userCredentials")
+        return userCredentials
     }
 
     suspend fun updateUserCredential(userCredentials: UserCredentials) {
@@ -41,6 +39,21 @@ class KingBurguerLocalStorage(
             preferences[TOKEN_TYPE] = userCredentials.tokenType
         }
     }
+
+    private fun mapUserCredentials(preferences: Preferences): UserCredentials {
+        val expires = preferences[EXPIRES_TIMESTAMP] ?: 0
+        val accessToken = preferences[ACCESS_TOKEN] ?: ""
+        val refreshToken = preferences[REFRESH_TOKEN] ?: ""
+        val tokenType = preferences[TOKEN_TYPE] ?: ""
+
+        return UserCredentials(
+            accessToken,
+            refreshToken,
+            expires,
+            tokenType
+        )
+    }
+
 
     companion object {
         val EXPIRES_TIMESTAMP = longPreferencesKey("expires_timestamp")
