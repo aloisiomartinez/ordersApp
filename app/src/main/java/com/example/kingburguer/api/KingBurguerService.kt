@@ -28,6 +28,12 @@ interface KingBurguerService {
         @Header("x-secret-key") secretKey: String = BuildConfig.X_SECRET_KEY
     ): Response<ResponseBody>
 
+    @POST("/coupons?page=0&expires=1/login")
+    suspend fun fetchCoupons(
+        @Body loginRequest: LoginRequest,
+        @Header("x-secret-key") secretKey: String = BuildConfig.X_SECRET_KEY
+    ): Response<ResponseBody>
+
     companion object {
 
         private const val BASE_URL = "https://hades.tiagoaguiar.co/kingburguer/"

@@ -54,4 +54,26 @@ class KingBurguerRepository(
             return LoginResponse.Error(e.message ?: "unexpected exception")
         }
     }
+
+    suspend fun fetchCoupons(loginRequest: LoginRequest): LoginResponse {
+        try {
+            val response = service.login(loginRequest)
+
+            if (!response.isSuccessful) {
+                val errorData = response.errorBody()?.string()?.let { json ->
+                    Gson().fromJson(json, LoginResponse.ErrorAuth::class.java)
+                }
+
+                return errorData ?: LoginResponse.Error("Internal Server Error")
+            }
+
+            val data = response.body()?.string()?.let { json ->
+                Gson().fromJson(json, LoginResponse.Sucess::class.java)
+            }
+
+            return data?: LoginResponse.Error("Unexpected response")
+        } catch (e: Exception) {
+            return LoginResponse.Error(e.message ?: "unexpected exception")
+        }
+    }
 }

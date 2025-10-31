@@ -88,6 +88,7 @@ fun MainScreen() {
                             Icon(imageVector = Icons.Filled.PowerSettingsNew, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface)
                         }
                     },
+                    modifier = Modifier.padding(top = 8.dp),
                     backgroundColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
 //                    colors = TopAppBarDefaults.topAppBarColors(

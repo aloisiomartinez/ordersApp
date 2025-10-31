@@ -1,6 +1,7 @@
 package com.example.kingburguer.compose.coupon
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.kingburguer.compose.MainScreen
@@ -38,181 +40,213 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kingburguer.viewmodels.CouponFilter
 import com.example.kingburguer.viewmodels.CouponViewModel
 import com.example.kingburguer.viewmodels.LoginViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
+data class Coupon(
+    val id: Int,
+    val productId: Int,
+    val coupon: String,
+    val createdAt: String,
+    val expirationAt: String,
+)
+
+
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CouponScreen(
-    modifier: Modifier = Modifier,
-    viewModel: CouponViewModel = viewModel(factory = CouponViewModel.factory)
-) {
-    val filteredCoupons by viewModel.filteredCoupons.collectAsState()
-    val selectedFilter by viewModel.selectedFilter.collectAsState()
-    val uiState by viewModel.uiState.collectAsState()
-    val options = listOf("Ativos", "Expirados", "Todos") // lista de opções
-    var selectedOption by remember { mutableStateOf(options.first()) }
+fun CouponScreen(modifier: Modifier = Modifier) {
+    val coupons = listOf(
+        Coupon(
+            id = 510,
+            productId = 1,
+            coupon = "FHMQGA",
+            createdAt = "2025-09-02T12:24:19",
+            expirationAt = "2025-09-02T12:24:19"
+        ),
+        Coupon(
+            id = 526,
+            productId = 1,
+            coupon = "CFOFTX",
+            createdAt = "2025-05-06T15:47:43",
+            expirationAt = "2025-05-21T15:47:44"
+        ),
+        Coupon(
+            id = 527,
+            productId = 4,
+            coupon = "SKATKD",
+            createdAt = "2025-05-06T16:57:02",
+            expirationAt = "2025-12-12T16:57:02"
+        ),
+        Coupon(
+            id = 528,
+            productId = 4,
+            coupon = "RCIBWL",
+            createdAt = "2025-05-06T16:59:14",
+            expirationAt = "2025-12-12T16:57:02"
+        ),
+        Coupon(
+            id = 529,
+            productId = 4,
+            coupon = "ABMANS",
+            createdAt = "2025-05-06T17:03:05",
+            expirationAt = "2025-05-21T17:03:05"
+        ),
+        Coupon(
+            id = 530,
+            productId = 4,
+            coupon = "YDAZSD",
+            createdAt = "2025-05-06T17:05:32",
+            expirationAt = "2025-05-21T17:05:32"
+        ),
+        Coupon(
+            id = 531,
+            productId = 4,
+            coupon = "IULAWA",
+            createdAt = "2025-05-06T17:06:33",
+            expirationAt = "2025-05-21T17:06:33"
+        ),
+        Coupon(
+            id = 532,
+            productId = 4,
+            coupon = "NLPXRO",
+            createdAt = "2025-05-06T17:07:55",
+            expirationAt = "2025-05-21T17:07:55"
+        ),
+        Coupon(
+            id = 533,
+            productId = 6,
+            coupon = "ZBVEAH",
+            createdAt = "2025-05-06T17:28:46",
+            expirationAt = "2025-05-21T17:28:47"
+        ),
+        Coupon(
+            id = 534,
+            productId = 10,
+            coupon = "YJNSTM",
+            createdAt = "2025-05-06T17:30:33",
+            expirationAt = "2025-05-21T17:30:33"
+        ),
+        Coupon(
+            id = 535,
+            productId = 4,
+            coupon = "ZBNPPB",
+            createdAt = "2025-05-06T18:28:22",
+            expirationAt = "2025-05-21T18:28:22"
+        ),
+        Coupon(
+            id = 536,
+            productId = 4,
+            coupon = "EMVAOQ",
+            createdAt = "2025-05-06T19:00:18",
+            expirationAt = "2025-05-21T19:00:18"
+        ),
+    )
 
-    Surface(
-        modifier = modifier.fillMaxSize().background(Color(0xFFF8F8F8)).padding(32.dp)
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
     ) {
-        if (uiState.isLoading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        } else if (filteredCoupons.isEmpty()) {
-            Text(
-                text = "Nenhum cupom encontrado",
-                style = MaterialTheme.typography.h5,
-                modifier = Modifier.padding(16.dp)
-            )
-        } else {
 
-        }
+        val options = listOf("Ativos", "Expirados", "Todos")
+        var selectedOption by remember { mutableStateOf(options.first()) }
 
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+        Row(
+            modifier = Modifier.padding(top = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Card(
-                elevation = 2.dp,
-                modifier = Modifier.fillMaxWidth(),
-                backgroundColor = Color.White,
-                border = BorderStroke(1.dp, Color(0xFFE0E0E0))
-            ) {
+            options.forEach { text ->
                 Row(
-                    modifier = Modifier.padding(top = 12.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Row(
+                    RadioButton(
+                        selected = (text == selectedOption),
+                        onClick = { selectedOption = text }
+                    )
+                    Text(
+                        text = text,
+                        color = MaterialTheme.colors.onSurface,
                         modifier = Modifier
-                            .selectable(
-                                selected = selectedFilter == CouponFilter.ACTIVE,
-                                onClick = { viewModel.setFilter(CouponFilter.ACTIVE) }
-                            ),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RadioButton(
-                            selected = selectedFilter == CouponFilter.ACTIVE,
-                            onClick = { viewModel.setFilter(CouponFilter.ACTIVE) }
-                        )
-                        Text("Ativos",
-                            modifier = Modifier
-                            .padding(start = 0.dp))
-                    }
-
-                    Row(
-                        modifier = Modifier
-                            .selectable(
-                                selected = selectedFilter == CouponFilter.EXPIRED,
-                                onClick = { viewModel.setFilter(CouponFilter.EXPIRED) }
-                            ),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RadioButton(
-                            selected = selectedFilter == CouponFilter.EXPIRED,
-                            onClick = { viewModel.setFilter(CouponFilter.EXPIRED) }
-                        )
-                        Text("Expirados",
-                            modifier = Modifier
-                                .padding(start = 0.dp)
-                        )
-                    }
-
-                    Row(
-                        modifier = Modifier
-                            .selectable(
-                                selected = selectedFilter == CouponFilter.ALL,
-                                onClick = { viewModel.setFilter(CouponFilter.ALL) }
-                            ),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RadioButton(
-                            selected = selectedFilter == CouponFilter.ALL,
-                            onClick = { viewModel.setFilter(CouponFilter.ALL) }
-                        )
-                        Text("Todos",
-                            Modifier
-                                .padding(start = 0.dp)
-                        )
-                    }
+                            .padding(start = 0.dp)
+                    )
                 }
-
             }
+        }
+
+        LazyColumn {
+            itemsIndexed(coupons) { index, item ->
+                val expired = toDate(item.expirationAt).before(Date())
+                if (selectedOption == options[0] &&  expired) return@itemsIndexed
+                if (selectedOption == options[1] && !expired) return@itemsIndexed
+
+                val topPadding = if (index == 0) 12.dp else 20.dp
+                val bottomPadding = if (index == coupons.size - 1) 12.dp else 0.dp
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = 12.dp,
+                            end = 20.dp,
+                            bottom = bottomPadding,
+                            top = topPadding
+                        ),
+                ) {
+                    Column(
+                        modifier = Modifier.padding(vertical = 16.dp, horizontal = 12.dp),
+                    ) {
+                        Text(
+                            text = item.coupon,
+                            color = if (expired) Color.Gray else MaterialTheme.colors.primary,
+                            style = MaterialTheme.typography.h5,
+                            fontWeight = FontWeight.Bold,
+                        )
 
                         Text(
-                            text = "Cupons disponíveis",
-                            style = MaterialTheme.typography.subtitle1,
-                            color = MaterialTheme.colors.secondary,
-                            modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
+                            text = "Expira: ${toDateBR(item.expirationAt)}",
+                            color = MaterialTheme.colors.onSurface,
+                            style = MaterialTheme.typography.body2,
                         )
-                        LazyColumn(
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            itemsIndexed(filteredCoupons) { _, coupon ->
-                                CouponCard(
-                                    coupon.name,
-                                    coupon.expirationDate
-                                )
-                            }
-                        }
+                    }
                 }
-
             }
-
-
-}
-
-
-
-
-
-@Composable
-fun CouponCard(name: String, expiration: String) {
-    Card(
-        modifier = Modifier
-            .background(color = Color.Blue)
-            .fillMaxWidth()
-            .border(BorderStroke(4.dp, MaterialTheme.colors.onSurface))
-    ) {
-       Column(
-           modifier = Modifier.padding(8.dp).background(color = MaterialTheme.colors.onPrimary)
-       ) {
-           Text(
-               text = name,
-               modifier = Modifier.padding(bottom = 8.dp)
-           )
-           Text(
-               text = expiration
-           )
-       }
+        }
     }
+
 }
 
+// TODO: mover para outro lugar, por hora fica aqui para testar layout
+private fun toDate(value: String): Date {
+    val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        .parse(value)
+    return date ?: Date()
+}
 
-@Preview(showBackground = true)
+// TODO: mover para outro lugar, por hora fica aqui para testar layout
+private fun toDateBR(value: String): String {
+    val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        .parse(value)
+
+    val dateFormatted = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+        .format(date!!) // unwrap
+
+    return dateFormatted
+}
+
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun LightCouponScreenPreview() {
-    KingBurguerTheme(
-        darkTheme = false
-    ) {
-        CouponScreen(
-            viewModel =  viewModel(factory = CouponViewModel.factory)
-        )
+    KingBurguerTheme(dynamicColor = false, darkTheme = false) {
+        CouponScreen()
     }
 }
 
-
-
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun DarkCouponScreenPreview() {
-    KingBurguerTheme(
-        darkTheme = true
-    ) {
-        CouponScreen(
-            viewModel =  viewModel(factory = CouponViewModel.factory)
-        )
+    KingBurguerTheme(dynamicColor = false, darkTheme = true) {
+        CouponScreen()
     }
 }
