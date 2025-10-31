@@ -71,6 +71,9 @@ dependencies {
     implementation(libs.retrofit2.converter.gson)
     implementation(libs.okttp3.logging.interceptor)
 
+    // Data Store
+    implementation(libs.datastore.preferences)
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -4,8 +4,12 @@ import com.example.kingburguer.api.KingBurguerService
 import com.google.gson.Gson
 
 class KingBurguerRepository(
-    private val service: KingBurguerService
+    private val service: KingBurguerService,
+    private val localStorage: KingBurguerLocalStorage
 ) {
+
+    // "get"
+    val textFlow = localStorage.userCredentialsFlow
 
     suspend fun postUser(userRequest: UserRequest): UserCreateResponse {
         val response = service.postUser(userRequest)
@@ -33,7 +37,7 @@ class KingBurguerRepository(
         }
     }
 
-    suspend fun login(loginRequest: LoginRequest): LoginResponse {
+    suspend fun login(loginRequest: LoginRequest, keepLogged: Boolean): LoginResponse {
         try {
             val response = service.login(loginRequest)
 
@@ -49,7 +53,22 @@ class KingBurguerRepository(
                 Gson().fromJson(json, LoginResponse.Sucess::class.java)
             }
 
-            return data?: LoginResponse.Error("Unexpected response")
+            if (data == null ) {
+                return LoginResponse.Error("Unexpected response")
+            }
+
+            if (keepLogged) {
+                val userCredentials = UserCredentials(
+                    data.accessToken,
+                    data.refreshToken,
+                    data.expiresSeconds.toLong(),
+                    data.tokenType
+                )
+
+                localStorage.updateUserCredential(userCredentials)
+            }
+
+            return data
         } catch (e: Exception) {
             return LoginResponse.Error(e.message ?: "unexpected exception")
         }

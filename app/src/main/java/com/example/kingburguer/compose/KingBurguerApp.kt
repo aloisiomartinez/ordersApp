@@ -24,7 +24,7 @@ fun KingBurguerApp(
 fun KingBurguerNavHost(navController: NavHostController, contentPadding: PaddingValues) {
     NavHost(
         navController = navController,
-        startDestination = Screen.MAIN.route
+        startDestination = Screen.LOGIN.route
     ) {
         composable(Screen.LOGIN.route) {
             LoginScreen(

@@ -1,9 +1,11 @@
 package com.example.kingburguer.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -11,6 +13,7 @@ import com.example.kingburguer.api.KingBurguerService
 import com.example.kingburguer.compose.login.LoginFormState
 import com.example.kingburguer.compose.login.LoginUiState
 import com.example.kingburguer.compose.signup.FieldState
+import com.example.kingburguer.data.KingBurguerLocalStorage
 import com.example.kingburguer.data.KingBurguerRepository
 import com.example.kingburguer.data.LoginRequest
 import com.example.kingburguer.data.LoginResponse
@@ -38,6 +41,14 @@ class LoginViewModel(
 
     private val emailValidator = EmailValidator()
     private val passwordValidator = PasswordValidator()
+
+    init {
+        viewModelScope.launch {
+            repository.textFlow.collect { value ->
+                Log.i("teste", value.toString())
+            }
+        }
+    }
 
     fun updateEmail(newEmail: String) {
         val textString = emailValidator.validate(newEmail)
@@ -83,7 +94,6 @@ class LoginViewModel(
             it.copy(isLoading = true)
         }
 
-
         // Simulação de latencia de rede/ atraso de chamada
         viewModelScope.launch {
             with(formState) {
@@ -93,8 +103,7 @@ class LoginViewModel(
                     password = password.field
                 )
 
-
-                val result = repository.login(loginRequest)
+                val result = repository.login(loginRequest, rememberMe)
 
                 when(result) {
                     is LoginResponse.Sucess -> {
@@ -121,8 +130,10 @@ class LoginViewModel(
     companion object {
         val factory = viewModelFactory {
             initializer {
+                val application = this[APPLICATION_KEY]!!.applicationContext
                 val service = KingBurguerService.create()
-                val repository = KingBurguerRepository(service)
+                val localStorage = KingBurguerLocalStorage(application)
+                val repository = KingBurguerRepository(service,localStorage )
                 LoginViewModel(repository)
             }
         }
