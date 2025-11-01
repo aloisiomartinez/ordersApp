@@ -2,24 +2,33 @@ package com.example.kingburguer.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.kingburguer.api.KingBurguerService
 import com.example.kingburguer.data.KingBurguerLocalStorage
 import com.example.kingburguer.data.KingBurguerRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 class SplashViewModel(
     private val repository: KingBurguerRepository
 ): ViewModel() {
-    val hasSessionState = flow {
-        val userCredentials = repository.fetchInitialCredentials()
-        if (userCredentials.accessToken.isNotBlank() && System.currentTimeMillis() < userCredentials.expiresTimestamp) {
-            emit(true)
-        } else {
-            emit(false)
+
+    private val _hasSessionState = MutableStateFlow<Boolean?>(null)
+    val hasSession: StateFlow<Boolean?> = _hasSessionState
+
+    init {
+        viewModelScope.launch {
+            with(repository.fetchInitialCredentials()) {
+                _hasSessionState.value =
+                        accessToken.isNotBlank() && System.currentTimeMillis() < expiresTimestamp
+            }
         }
     }
+
 
     companion object {
         val factory = viewModelFactory {
