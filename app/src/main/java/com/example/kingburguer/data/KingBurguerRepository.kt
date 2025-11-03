@@ -50,7 +50,7 @@ class KingBurguerRepository(
             }
 
             val data = response.body()?.string()?.let { json ->
-                Gson().fromJson(json, LoginResponse.Sucess::class.java)
+                Gson().fromJson(json, LoginResponse.Success::class.java)
             }
 
             if (data == null ) {
@@ -74,6 +74,43 @@ class KingBurguerRepository(
         }
     }
 
+    suspend fun refreshToken(request: RefreshTokenRequest): LoginResponse {
+        try {
+            val userCredentials = localStorage.fetchInitialUserCredentials()
+
+            val response = service.refreshToken(request, "${userCredentials.tokenType} ${userCredentials.accessToken}")
+
+            if (!response.isSuccessful) {
+                val errorData = response.errorBody()?.string()?.let { json ->
+                    Gson().fromJson(json, LoginResponse.ErrorAuth::class.java)
+                }
+
+                return errorData ?: LoginResponse.Error("Internal Server Error")
+            }
+
+            val data = response.body()?.string()?.let { json ->
+                Gson().fromJson(json, LoginResponse.Success::class.java)
+            }
+
+            if (data == null ) {
+                return LoginResponse.Error("Unexpected response")
+            }
+
+            val newUserCredentials = UserCredentials(
+                data.accessToken,
+                data.refreshToken,
+                data.expiresSeconds.toLong(),
+                data.tokenType
+            )
+
+            localStorage.updateUserCredential(newUserCredentials)
+
+            return data
+        } catch (e: Exception) {
+            return LoginResponse.Error(e.message ?: "unexpected exception")
+        }
+    }
+
     suspend fun fetchCoupons(loginRequest: LoginRequest): LoginResponse {
         try {
             val response = service.login(loginRequest)
@@ -87,7 +124,7 @@ class KingBurguerRepository(
             }
 
             val data = response.body()?.string()?.let { json ->
-                Gson().fromJson(json, LoginResponse.Sucess::class.java)
+                Gson().fromJson(json, LoginResponse.Success::class.java)
             }
 
             return data?: LoginResponse.Error("Unexpected response")

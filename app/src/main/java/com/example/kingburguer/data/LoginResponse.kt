@@ -3,7 +3,7 @@ package com.example.kingburguer.data
 import com.google.gson.annotations.SerializedName
 
 sealed class LoginResponse {
-    data class Sucess(
+    data class Success(
 
         @SerializedName("access_token")
         val accessToken: String,

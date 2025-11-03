@@ -2,6 +2,7 @@ package com.example.kingburguer.api
 
 import com.example.kingburguer.BuildConfig
 import com.example.kingburguer.data.LoginRequest
+import com.example.kingburguer.data.RefreshTokenRequest
 import com.example.kingburguer.data.UserRequest
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
@@ -13,6 +14,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 interface KingBurguerService {
 
@@ -26,6 +28,12 @@ interface KingBurguerService {
     suspend fun login(
         @Body loginRequest: LoginRequest,
         @Header("x-secret-key") secretKey: String = BuildConfig.X_SECRET_KEY
+    ): Response<ResponseBody>
+
+    @PUT("auth/refresh-token")
+    suspend fun refreshToken(
+        @Body request: RefreshTokenRequest,
+        @Header("Authorization") token: String
     ): Response<ResponseBody>
 
     @POST("/coupons?page=0&expires=1/login")

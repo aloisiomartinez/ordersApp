@@ -98,7 +98,7 @@ class LoginViewModel(
                 val result = repository.login(loginRequest, rememberMe)
 
                 when(result) {
-                    is LoginResponse.Sucess -> {
+                    is LoginResponse.Success -> {
                         _uiState.update { it.copy(isLoading = false, goToHome = true) }
 
                     }
