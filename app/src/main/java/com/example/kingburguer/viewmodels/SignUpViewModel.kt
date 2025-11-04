@@ -14,6 +14,7 @@ import com.example.kingburguer.api.KingBurguerService
 import com.example.kingburguer.compose.signup.FieldState
 import com.example.kingburguer.compose.signup.FormState
 import com.example.kingburguer.compose.signup.SignUpUiState
+import com.example.kingburguer.data.ApiResult
 import com.example.kingburguer.data.KingBurguerLocalStorage
 import com.example.kingburguer.data.KingBurguerRepository
 import com.example.kingburguer.data.UserCreateResponse
@@ -177,15 +178,12 @@ class SignUpViewModel(
                     val result = repository.postUser(userRequest)
 
                     when(result) {
-                        is UserCreateResponse.Sucess -> {
+                        is ApiResult.Success -> {
                             _uiState.update { it.copy(isLoading = false, goToLogin = true) }
 
                         }
-                        is UserCreateResponse.ErrorAuth -> {
-                            _uiState.update { it.copy(isLoading = false, error = result.detail.message) }
-                        }
-                        is UserCreateResponse.Error -> {
-                            _uiState.update { it.copy(isLoading = false, error = result.detail) }
+                        is ApiResult.Error -> {
+                            _uiState.update { it.copy(isLoading = false, error = result.message) }
                         }
                     }
                 }

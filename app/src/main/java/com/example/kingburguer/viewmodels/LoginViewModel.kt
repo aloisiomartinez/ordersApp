@@ -13,6 +13,7 @@ import com.example.kingburguer.api.KingBurguerService
 import com.example.kingburguer.compose.login.LoginFormState
 import com.example.kingburguer.compose.login.LoginUiState
 import com.example.kingburguer.compose.signup.FieldState
+import com.example.kingburguer.data.ApiResult
 import com.example.kingburguer.data.KingBurguerLocalStorage
 import com.example.kingburguer.data.KingBurguerRepository
 import com.example.kingburguer.data.LoginRequest
@@ -98,15 +99,12 @@ class LoginViewModel(
                 val result = repository.login(loginRequest, rememberMe)
 
                 when(result) {
-                    is LoginResponse.Success -> {
+                    is ApiResult.Success -> {
                         _uiState.update { it.copy(isLoading = false, goToHome = true) }
 
                     }
-                    is LoginResponse.ErrorAuth -> {
-                        _uiState.update { it.copy(isLoading = false, error = result.detail.message) }
-                    }
-                    is LoginResponse.Error -> {
-                        _uiState.update { it.copy(isLoading = false, error = result.detail) }
+                    is ApiResult.Error -> {
+                        _uiState.update { it.copy(isLoading = false, error = result.message) }
                     }
                 }
             }

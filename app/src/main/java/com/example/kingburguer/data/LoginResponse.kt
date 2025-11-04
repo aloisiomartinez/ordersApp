@@ -2,9 +2,7 @@ package com.example.kingburguer.data
 
 import com.google.gson.annotations.SerializedName
 
-sealed class LoginResponse {
-    data class Success(
-
+data class LoginResponse (
         @SerializedName("access_token")
         val accessToken: String,
 
@@ -16,11 +14,8 @@ sealed class LoginResponse {
 
         @SerializedName("expires_seconds")
         val expiresSeconds: Double,
+)
 
-    ): LoginResponse()
+data class Error(val detail: String)
 
-    data class Error(val detail: String) : LoginResponse()
-
-    data class ErrorAuth(val detail: ErrorDetail): LoginResponse()
-
-}
+data class ErrorAuth(val detail: ErrorDetail)
