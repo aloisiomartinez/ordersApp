@@ -24,9 +24,11 @@ class KingBurguerRepository(
         val userCredentials = localStorage.fetchInitialUserCredentials()
         val token = "${userCredentials.tokenType} ${userCredentials.accessToken}"
 
-        return apiCall {
+        var result =  apiCall {
             service.fetchFeed(token)
         }
+
+        return result
     }
 
     suspend fun login(loginRequest: LoginRequest, keepLogged: Boolean): ApiResult<LoginResponse> {

@@ -45,7 +45,7 @@ interface KingBurguerService {
         @Header("x-secret-key") secretKey: String = BuildConfig.X_SECRET_KEY
     ): Response<ResponseBody>
 
-    @GET("/feed")
+    @GET("feed")
     suspend fun fetchFeed(
         @Header("Authorization") token: String
     ): Response<FeedResponse>

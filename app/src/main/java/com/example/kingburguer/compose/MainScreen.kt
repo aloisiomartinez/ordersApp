@@ -126,8 +126,7 @@ fun MainContentScreen(
                     .padding(
                         top = contentPadding.calculateTopPadding(),
                         bottom = contentPadding.calculateBottomPadding()
-                    ),
-                categories = emptyList<CategoryResponse>()
+                    )
             ) { productId ->
                 navController.navigate("${Screen.PRODUCT.route}/$productId")
             }

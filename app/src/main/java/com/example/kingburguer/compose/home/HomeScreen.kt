@@ -42,12 +42,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
 import com.example.kingburguer.R
 import com.example.kingburguer.common.currency
 import com.example.kingburguer.data.CategoryResponse
 import com.example.kingburguer.ui.theme.KingBurguerTheme
 import com.example.kingburguer.ui.theme.Orange600
 import com.example.kingburguer.viewmodels.HomeViewModel
+import org.jetbrains.annotations.Async
 
 data class Product(
     val id: Int,
@@ -77,7 +79,7 @@ fun HomeScreen(
     state: HomeUiState,
     onProductClicked: (Int) -> Unit
 ) {
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         when {
             state.isLoading -> {
                 CircularProgressIndicator()
@@ -86,7 +88,7 @@ fun HomeScreen(
                 Text(state.error, color = MaterialTheme.colorScheme.primary)
             }
             else -> {
-                HomeScreen(modifier, state.categories, onProductClicked)
+                HomeScreenColumn(modifier, state.categories, onProductClicked)
             }
         }
     }
@@ -96,7 +98,7 @@ fun HomeScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(
+fun HomeScreenColumn(
     modifier: Modifier = Modifier,
     categories: List<CategoryResponse>,
     onProductClicked: (Int) -> Unit
@@ -170,7 +172,9 @@ fun HomeScreen(
                                     .padding(start = startPadding, end = endPadding)
                                     .widthIn(max = 160.dp)
                             ) {
-                                Image(
+                                AsyncImage(
+                                    model = product.pictureUrl,
+                                    placeholder = painterResource(R.drawable.logo),
                                     modifier = Modifier
                                         .size(140.dp, 180.dp)
                                         .border(
@@ -180,7 +184,6 @@ fun HomeScreen(
                                         .clickable {
                                             onProductClicked(product.id)
                                         },
-                                    painter = painterResource(R.drawable.logo),
                                     contentDescription = product.name
                                 )
                                 Text(

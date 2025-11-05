@@ -1,6 +1,5 @@
 package com.example.kingburguer.viewmodels
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
