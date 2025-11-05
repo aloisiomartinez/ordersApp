@@ -9,12 +9,5 @@ sealed class UserCreateResponse {
         val birthday: String
     ): UserCreateResponse()
 
-    data class Error(val detail: String) : UserCreateResponse()
-
-    data class ErrorAuth(val detail: ErrorDetail): UserCreateResponse()
-
 }
 
-data class ErrorDetail(
-    val message: String
-)

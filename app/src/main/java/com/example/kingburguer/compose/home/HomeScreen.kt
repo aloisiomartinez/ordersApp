@@ -23,12 +23,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,10 +41,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kingburguer.R
 import com.example.kingburguer.common.currency
+import com.example.kingburguer.data.CategoryResponse
 import com.example.kingburguer.ui.theme.KingBurguerTheme
 import com.example.kingburguer.ui.theme.Orange600
+import com.example.kingburguer.viewmodels.HomeViewModel
 
 data class Product(
     val id: Int,
@@ -51,41 +56,51 @@ data class Product(
     val price: Double = 19.0
 )
 
-data class Category(
-    val name: String,
-    val products: List<Product>
-)
+@Composable
+fun HomeScreen(
+    modifier: Modifier,
+    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.factory),
+    onProductClicked: (Int) -> Unit
+) {
+    val state = viewModel.uiState.collectAsState().value
+    HomeScreen(
+        modifier,
+        state,
+        onProductClicked
+    )
+}
+
+
+@Composable
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    state: HomeUiState,
+    onProductClicked: (Int) -> Unit
+) {
+    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        when {
+            state.isLoading -> {
+                CircularProgressIndicator()
+            }
+            state.error != null ->{
+                Text(state.error, color = MaterialTheme.colorScheme.primary)
+            }
+            else -> {
+                HomeScreen(modifier, state.categories, onProductClicked)
+            }
+        }
+    }
+}
+
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    categories: List<CategoryResponse>,
     onProductClicked: (Int) -> Unit
 ) {
-    val categories = listOf(
-        Category("Vegetariano", listOf(
-            Product(1,"Combo V1"),
-            Product(2,"Combo V2"),
-            Product(3,"Combo V3")
-            )
-        ),
-        Category("Bovino", listOf(
-            Product(4,"Combo B1 com nom super grande e que não cabe na tela"),
-            Product(5,"Combo B2"),
-            Product(6,"Combo B3"),
-            Product(7,"Combo B4"),
-            Product(8,"Combo B5"),
-            Product(9,"Combo B6")
-            )
-        ),
-        Category("Sobremesa", listOf(
-            Product(10,"Combo S1"),
-            Product(11,"Combo S2"),
-            Product(12,"Combo S3")
-            )
-        )
-    )
-
 
     Column(
         modifier = modifier
@@ -126,9 +141,9 @@ fun HomeScreen(
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            itemsIndexed(categories) {index, cat ->
+            itemsIndexed(categories) { index, cat ->
                 val topPadding = if (index == 0) 20.dp else 0.dp
-                val bottomPadding = if(index == categories.size - 1) 20.dp else 0.dp
+                val bottomPadding = if (index == categories.size - 1) 20.dp else 0.dp
 
                 Text(
                     modifier = Modifier
@@ -146,7 +161,7 @@ fun HomeScreen(
                     ) {
                         itemsIndexed(cat.products) { index, product ->
                             val startPadding = if (index == 0) 20.dp else 8.dp
-                            val endPadding = if(index == categories.size - 1) 20.dp else 8.dp
+                            val endPadding = if (index == categories.size - 1) 20.dp else 8.dp
 
                             Column(
                                 verticalArrangement = Arrangement.spacedBy(6.dp),
@@ -165,7 +180,7 @@ fun HomeScreen(
                                         .clickable {
                                             onProductClicked(product.id)
                                         },
-                                    painter = painterResource(product.picture),
+                                    painter = painterResource(R.drawable.logo),
                                     contentDescription = product.name
                                 )
                                 Text(
@@ -194,8 +209,6 @@ fun HomeScreen(
                         }
                     }
                 }
-
-
             }
         }
     }
@@ -208,18 +221,31 @@ fun LightHomeScreenPreview() {
     KingBurguerTheme(
         darkTheme = false
     ) {
-        HomeScreen() {}
+        val state = HomeUiState(isLoading = true)
+        HomeScreen(state = state) {}
     }
 }
 
 
-
 @Preview(showBackground = true)
 @Composable
-fun DarkHomeScreenPreview() {
+fun DarkHomeErrorScreenPreview() {
     KingBurguerTheme(
         darkTheme = true
     ) {
-        HomeScreen() {}
+        val state = HomeUiState(error = "Erro de teste")
+        HomeScreen(state = state) {}
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun DarkHomeEmptyScreenPreview() {
+    KingBurguerTheme(
+        darkTheme = true
+    ) {
+        val state = HomeUiState(categories = emptyList<CategoryResponse>())
+        HomeScreen(state = state) {}
     }
 }

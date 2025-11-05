@@ -1,6 +1,7 @@
 package com.example.kingburguer.api
 
 import com.example.kingburguer.BuildConfig
+import com.example.kingburguer.data.FeedResponse
 import com.example.kingburguer.data.LoginRequest
 import com.example.kingburguer.data.LoginResponse
 import com.example.kingburguer.data.RefreshTokenRequest
@@ -43,6 +44,11 @@ interface KingBurguerService {
         @Body loginRequest: LoginRequest,
         @Header("x-secret-key") secretKey: String = BuildConfig.X_SECRET_KEY
     ): Response<ResponseBody>
+
+    @GET("/feed")
+    suspend fun fetchFeed(
+        @Header("Authorization") token: String
+    ): Response<FeedResponse>
 
     companion object {
 

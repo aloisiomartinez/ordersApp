@@ -48,6 +48,7 @@ import com.example.kingburguer.compose.coupon.CouponScreen
 import com.example.kingburguer.compose.home.HomeScreen
 import com.example.kingburguer.compose.product.ProductScreen
 import com.example.kingburguer.compose.profile.ProfileScreen
+import com.example.kingburguer.data.CategoryResponse
 import com.example.kingburguer.ui.theme.KingBurguerTheme
 import com.example.kingburguer.viewmodels.Coupon
 
@@ -125,7 +126,8 @@ fun MainContentScreen(
                     .padding(
                         top = contentPadding.calculateTopPadding(),
                         bottom = contentPadding.calculateBottomPadding()
-                    )
+                    ),
+                categories = emptyList<CategoryResponse>()
             ) { productId ->
                 navController.navigate("${Screen.PRODUCT.route}/$productId")
             }

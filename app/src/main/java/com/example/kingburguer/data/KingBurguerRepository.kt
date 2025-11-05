@@ -2,6 +2,7 @@ package com.example.kingburguer.data
 
 import com.example.kingburguer.api.KingBurguerService
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import retrofit2.Response
 
 class KingBurguerRepository(
@@ -17,6 +18,15 @@ class KingBurguerRepository(
             service.postUser(userRequest)
         }
         return result
+    }
+
+    suspend fun fetchFeed(): ApiResult<FeedResponse> {
+        val userCredentials = localStorage.fetchInitialUserCredentials()
+        val token = "${userCredentials.tokenType} ${userCredentials.accessToken}"
+
+        return apiCall {
+            service.fetchFeed(token)
+        }
     }
 
     suspend fun login(loginRequest: LoginRequest, keepLogged: Boolean): ApiResult<LoginResponse> {
@@ -90,8 +100,13 @@ class KingBurguerRepository(
             if (!response.isSuccessful) {
                 val errorData = response.errorBody()?.string()?.let { json ->
                     if (response.code() == 401) {
-                        val errorAuth = Gson().fromJson(json, ErrorAuth::class.java)
-                        ApiResult.Error(errorAuth.detail.message)
+                        try {
+                            val errorAuth = Gson().fromJson(json, ErrorAuth::class.java)
+                            ApiResult.Error(errorAuth.detail.message)
+                        } catch (e: JsonSyntaxException) {
+                            val error = Gson().fromJson(json, Error::class.java)
+                            ApiResult.Error(error.detail)
+                        }
                     } else {
                         Gson().fromJson(json, ApiResult.Error::class.java)
                     }
