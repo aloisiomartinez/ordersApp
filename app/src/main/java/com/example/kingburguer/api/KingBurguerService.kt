@@ -5,6 +5,7 @@ import com.example.kingburguer.data.FeedResponse
 import com.example.kingburguer.data.LoginRequest
 import com.example.kingburguer.data.LoginResponse
 import com.example.kingburguer.data.ProductDetailResponse
+import com.example.kingburguer.data.ProfileResponse
 import com.example.kingburguer.data.RefreshTokenRequest
 import com.example.kingburguer.data.UserCreateResponse
 import com.example.kingburguer.data.UserRequest
@@ -57,6 +58,11 @@ interface KingBurguerService {
         @Header("Authorization") token: String,
         @Path("id") productId: Int
     ): Response<ProductDetailResponse>
+
+    @GET("users/me")
+    suspend fun fetchMe(
+        @Header("Authorization") token: String
+    ): Response<ProfileResponse>
 
 
     companion object {

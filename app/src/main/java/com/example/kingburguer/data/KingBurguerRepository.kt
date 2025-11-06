@@ -52,6 +52,13 @@ class KingBurguerRepository(
         return result
     }
 
+    suspend fun fetchMe(): ApiResult<ProfileResponse> {
+        val userCredentials = localStorage.fetchInitialUserCredentials()
+        val token = "${userCredentials.tokenType} ${userCredentials.accessToken}"
+
+        return apiCall {  service.fetchMe(token) }
+    }
+
     suspend fun refreshToken(request: RefreshTokenRequest): ApiResult<LoginResponse> {
         val userCredentials = localStorage.fetchInitialUserCredentials()
 
