@@ -1,6 +1,5 @@
 package com.example.kingburguer.compose.product
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,10 +13,12 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -29,26 +30,52 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
 import com.example.kingburguer.R
 import com.example.kingburguer.common.currency
 import com.example.kingburguer.compose.component.KingButton
-import com.example.kingburguer.compose.home.Product
+import com.example.kingburguer.data.CategoryDetailResponse
+import com.example.kingburguer.data.ProductDetailResponse
 import com.example.kingburguer.ui.theme.KingBurguerTheme
 import com.example.kingburguer.viewmodels.ProductViewModel
+import java.util.Date
 
 @Composable
 fun ProductScreen(
     modifier: Modifier = Modifier,
     viewModel: ProductViewModel = viewModel(factory = ProductViewModel.factory)
 ) {
-    ProductScreen(modifier, viewModel.product)
+    val state = viewModel.uiState.collectAsState().value
+    ProductScreen(modifier, state)
 
 }
 
 @Composable
 fun ProductScreen(
+    modifier: Modifier,
+    state: ProductUiState
+) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        when {
+            state.isLoading -> {
+                CircularProgressIndicator()
+            }
+
+            state.error != null -> {
+                Text(state.error, color = MaterialTheme.colorScheme.primary)
+            }
+
+            state.productDetail != null -> {
+                ProductScreen(modifier, product = state.productDetail)
+            }
+        }
+    }
+}
+
+@Composable
+fun ProductScreen(
     modifier: Modifier = Modifier,
-    product: Product
+    product: ProductDetailResponse
 ) {
 
     Surface(
@@ -66,11 +93,12 @@ fun ProductScreen(
                     .background(MaterialTheme.colorScheme.background)
                     .verticalScroll(rememberScrollState())
             ) {
-                Image(
+                AsyncImage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(230.dp),
-                    painter = painterResource(product.picture),
+                    model = product.pictureUrl,
+                    placeholder = painterResource(R.drawable.logo),
                     contentScale = ContentScale.Crop,
                     contentDescription = product.name
                 )
@@ -109,7 +137,7 @@ fun ProductScreen(
                     modifier = Modifier
                         .padding(start = 24.dp, end = 24.dp, bottom = 56.dp),
                     style = MaterialTheme.typography.bodyLarge,
-                    text = "Teste grande de Descrição do Produto",
+                    text = product.description,
                     color = MaterialTheme.colorScheme.onSurface
                 )
             }
@@ -129,10 +157,22 @@ fun LightProductScreenPreview() {
     KingBurguerTheme(
         darkTheme = false
     ) {
-        ProductScreen(product = Product(id = 1, name = "Teste"))
+        ProductScreen(
+            product = ProductDetailResponse(
+                id = 1,
+                name = "Descrição do Produto",
+                price = 21.99,
+                createdDate = Date(),
+                pictureUrl = "",
+                description = "Descrição do Texto do Produto muito grande",
+                categoryResponse = CategoryDetailResponse(
+                    1,
+                    "Categoria Teste"
+                )
+            )
+        )
     }
 }
-
 
 
 @Preview(showBackground = true)
@@ -141,6 +181,19 @@ fun DarkProductScreenPreview() {
     KingBurguerTheme(
         darkTheme = true
     ) {
-        ProductScreen(product = Product(id = 1, name = "Teste"))
+        ProductScreen(
+            product = ProductDetailResponse(
+                id = 1,
+                name = "Descrição do Produto",
+                price = 21.99,
+                createdDate = Date(),
+                pictureUrl = "",
+                description = "Descrição do Texto do Produto muito grande",
+                categoryResponse = CategoryDetailResponse(
+                    1,
+                    "Categoria Teste"
+                )
+            )
+        )
     }
 }

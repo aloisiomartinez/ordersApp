@@ -51,12 +51,6 @@ import com.example.kingburguer.ui.theme.Orange600
 import com.example.kingburguer.viewmodels.HomeViewModel
 import org.jetbrains.annotations.Async
 
-data class Product(
-    val id: Int,
-    val name: String = "",
-    @DrawableRes val picture: Int = R.drawable.example,
-    val price: Double = 19.0
-)
 
 @Composable
 fun HomeScreen(

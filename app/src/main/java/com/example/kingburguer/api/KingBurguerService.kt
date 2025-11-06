@@ -4,6 +4,7 @@ import com.example.kingburguer.BuildConfig
 import com.example.kingburguer.data.FeedResponse
 import com.example.kingburguer.data.LoginRequest
 import com.example.kingburguer.data.LoginResponse
+import com.example.kingburguer.data.ProductDetailResponse
 import com.example.kingburguer.data.RefreshTokenRequest
 import com.example.kingburguer.data.UserCreateResponse
 import com.example.kingburguer.data.UserRequest
@@ -18,6 +19,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 
 interface KingBurguerService {
 
@@ -49,6 +51,13 @@ interface KingBurguerService {
     suspend fun fetchFeed(
         @Header("Authorization") token: String
     ): Response<FeedResponse>
+
+    @GET("products/{id}")
+    suspend fun fetchProductById(
+        @Header("Authorization") token: String,
+        @Path("id") productId: Int
+    ): Response<ProductDetailResponse>
+
 
     companion object {
 
