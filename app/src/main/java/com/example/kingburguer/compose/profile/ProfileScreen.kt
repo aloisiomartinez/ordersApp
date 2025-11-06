@@ -1,5 +1,7 @@
 package com.example.kingburguer.compose.profile
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,12 +27,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kingburguer.R
+import com.example.kingburguer.common.formatted
 import com.example.kingburguer.data.ProfileResponse
 import com.example.kingburguer.ui.theme.KingBurguerTheme
+import com.example.kingburguer.validation.Mask
 import com.example.kingburguer.viewmodels.ProfileViewModel
 import java.util.Date
 
 
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun ProfileScreen(
     modifier: Modifier,
@@ -40,6 +45,7 @@ fun ProfileScreen(
     ProfileScreen(modifier, state)
 }
 
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
@@ -79,8 +85,8 @@ fun ProfileScreen(
                             ProfileProperty(R.string.prop_id, id)
                             ProfileProperty(R.string.prop_name, name)
                             ProfileProperty(R.string.prop_email, email)
-                            ProfileProperty(R.string.prop_document, document)
-                            ProfileProperty(R.string.prop_birthday, birthday)
+                            ProfileProperty(R.string.prop_document, Mask("###.###.###-##", "", document))
+                            ProfileProperty(R.string.prop_birthday, birthday.formatted())
                         }
                     }
                 }
