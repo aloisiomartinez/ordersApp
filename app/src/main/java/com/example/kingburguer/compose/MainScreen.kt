@@ -1,5 +1,7 @@
 package com.example.kingburguer.compose
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -52,6 +54,7 @@ import com.example.kingburguer.data.CategoryResponse
 import com.example.kingburguer.ui.theme.KingBurguerTheme
 import com.example.kingburguer.viewmodels.Coupon
 
+@RequiresApi(Build.VERSION_CODES.N)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
@@ -111,6 +114,7 @@ fun MainScreen() {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun MainContentScreen(
     navController: NavHostController,
@@ -165,7 +169,10 @@ fun MainContentScreen(
                     .padding(
                         top = contentPadding.calculateTopPadding(),
                         bottom = contentPadding.calculateBottomPadding()
-                    )
+                    ),
+                onCouponGenerated = {
+                    navController.popBackStack()
+                }
             )
         }
     }

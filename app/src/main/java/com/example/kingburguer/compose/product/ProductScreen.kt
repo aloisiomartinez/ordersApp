@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +35,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.kingburguer.R
 import com.example.kingburguer.common.currency
+import com.example.kingburguer.compose.component.KingAlert
 import com.example.kingburguer.compose.component.KingButton
 import com.example.kingburguer.data.CategoryDetailResponse
 import com.example.kingburguer.data.ProductDetailResponse
@@ -43,17 +46,30 @@ import java.util.Date
 @Composable
 fun ProductScreen(
     modifier: Modifier = Modifier,
-    viewModel: ProductViewModel = viewModel(factory = ProductViewModel.factory)
+    viewModel: ProductViewModel = viewModel(factory = ProductViewModel.factory),
+    onCouponGenerated: () -> Unit
 ) {
     val state = viewModel.uiState.collectAsState().value
-    ProductScreen(modifier, state)
+    ProductScreenState(
+        modifier = modifier,
+        state = state,
+        couponClicked = {
+            viewModel.createCoupon()
+        },
+        onCouponGenerated = {
+            viewModel.reset()
+            onCouponGenerated()
+        }
+    )
 
 }
 
 @Composable
-fun ProductScreen(
+fun ProductScreenState(
     modifier: Modifier,
-    state: ProductUiState
+    state: ProductUiState,
+    couponClicked: () -> Unit,
+    onCouponGenerated: () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         when {
@@ -64,18 +80,30 @@ fun ProductScreen(
             state.error != null -> {
                 Text(state.error, color = MaterialTheme.colorScheme.primary)
             }
+            else -> {
+                state.productDetail?.let {
+                    ProductScreenShow(modifier, product = state.productDetail, couponClicked)
+                }
 
-            state.productDetail != null -> {
-                ProductScreen(modifier, product = state.productDetail)
+                state.coupon?.let {
+                    KingAlert(
+                        onDismissRequest = {},
+                        onConfirmation = onCouponGenerated,
+                        dialogTitle = stringResource(R.string.app_name),
+                        dialogText = stringResource(R.string.coupon_generated, state.coupon.coupon),
+                        icon = Icons.Filled.Info
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun ProductScreen(
+fun ProductScreenShow(
     modifier: Modifier = Modifier,
-    product: ProductDetailResponse
+    product: ProductDetailResponse,
+    couponClicked: () -> Unit,
 ) {
 
     Surface(
@@ -140,12 +168,15 @@ fun ProductScreen(
                     text = product.description,
                     color = MaterialTheme.colorScheme.onSurface
                 )
+
+                KingButton(
+                    modifier = Modifier.padding(horizontal = 24.dp),
+                    text = stringResource(R.string.get_coupon),
+                    onClick = couponClicked
+                )
             }
 
-            KingButton(
-                modifier = Modifier.padding(horizontal = 24.dp),
-                text = stringResource(R.string.get_coupon)
-            ) { }
+
         }
     }
 }
@@ -157,7 +188,7 @@ fun LightProductScreenPreview() {
     KingBurguerTheme(
         darkTheme = false
     ) {
-        ProductScreen(
+        ProductScreenShow(
             product = ProductDetailResponse(
                 id = 1,
                 name = "Descrição do Produto",
@@ -170,7 +201,7 @@ fun LightProductScreenPreview() {
                     "Categoria Teste"
                 )
             )
-        )
+        ) {}
     }
 }
 
@@ -181,7 +212,7 @@ fun DarkProductScreenPreview() {
     KingBurguerTheme(
         darkTheme = true
     ) {
-        ProductScreen(
+        ProductScreenShow(
             product = ProductDetailResponse(
                 id = 1,
                 name = "Descrição do Produto",
@@ -194,6 +225,6 @@ fun DarkProductScreenPreview() {
                     "Categoria Teste"
                 )
             )
-        )
+        ) {}
     }
 }
