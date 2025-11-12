@@ -1,6 +1,9 @@
 package com.example.kingburguer.compose
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -11,6 +14,7 @@ import com.example.kingburguer.compose.login.LoginScreen
 import com.example.kingburguer.compose.signup.SignUpScreen
 import com.example.kingburguer.ui.theme.KingBurguerTheme
 
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun KingBurguerApp(
     startDestination: Screen,
@@ -23,6 +27,7 @@ fun KingBurguerApp(
 
 }
 
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun KingBurguerNavHost(navController: NavHostController, contentPadding: PaddingValues, startDestination: Screen) {
     NavHost(
@@ -51,13 +56,20 @@ fun KingBurguerNavHost(navController: NavHostController, contentPadding: Padding
             )
         }
         composable(Screen.MAIN.route) {
-            MainScreen()
+            MainScreen(
+                onNavigateToLogin = {
+                    navController.navigate(Screen.LOGIN.route) {
+                        popUpTo(Screen.MAIN.route) { inclusive = true }
+                    }
+                }
+            )
         }
 
     }
 }
 
 
+@RequiresApi(Build.VERSION_CODES.N)
 @Preview(showBackground = true)
 @Composable
 fun KingBurguerAppPreview() {

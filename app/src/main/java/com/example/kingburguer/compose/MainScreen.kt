@@ -25,6 +25,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +38,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -53,11 +55,35 @@ import com.example.kingburguer.compose.profile.ProfileScreen
 import com.example.kingburguer.data.CategoryResponse
 import com.example.kingburguer.ui.theme.KingBurguerTheme
 import com.example.kingburguer.viewmodels.Coupon
+import com.example.kingburguer.viewmodels.MainViewModel
+
+
+@RequiresApi(Build.VERSION_CODES.N)
+@Composable
+fun MainScreen(
+    onNavigateToLogin: () -> Unit,
+    viewModel: MainViewModel = viewModel(factory = MainViewModel.factory)
+) {
+    val shouldQuit = viewModel.uiStorage.collectAsState().value
+
+    if (shouldQuit) {
+        viewModel.reset()
+        onNavigateToLogin()
+    }
+
+    MainScreen(
+        onLogoutClick = {
+            viewModel.logout()
+        }
+    )
+}
 
 @RequiresApi(Build.VERSION_CODES.N)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    onLogoutClick: () -> Unit
+) {
     val navController = rememberNavController()
     var titleTopBarId by remember { mutableIntStateOf(R.string.menu_home) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -74,7 +100,7 @@ fun MainScreen() {
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(stringResource(titleTopBarId), )
+                        Text(stringResource(titleTopBarId))
 
                     },
                     navigationIcon = {
@@ -86,10 +112,21 @@ fun MainScreen() {
                     },
                     actions = {
                         IconButton(onClick = {}) {
-                            Icon(imageVector = Icons.Filled.Person, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface)
+                            Icon(
+                                imageVector = Icons.Filled.Person,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
                         }
-                        IconButton(onClick = {}) {
-                            Icon(imageVector = Icons.Filled.PowerSettingsNew, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface)
+                        IconButton(
+                            onClick =
+                                onLogoutClick
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.PowerSettingsNew,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
                         }
                     },
                     modifier = Modifier.padding(top = 8.dp),
@@ -108,7 +145,7 @@ fun MainScreen() {
                 }
             }
         ) { contentPadding ->
-            MainContentScreen(navController,contentPadding)
+            MainContentScreen(navController, contentPadding)
         }
     }
 }
@@ -245,31 +282,25 @@ data class NavigationItem(
 )
 
 
-
-
-
+@RequiresApi(Build.VERSION_CODES.N)
 @Preview(showBackground = true)
 @Composable
 fun LightMainScreenPreview() {
     KingBurguerTheme(
         darkTheme = false
     ) {
-        MainScreen(
-
-        )
+        MainScreen() {}
     }
 }
 
 
-
+@RequiresApi(Build.VERSION_CODES.N)
 @Preview(showBackground = true)
 @Composable
 fun DarkHMainScreenPreview() {
     KingBurguerTheme(
         darkTheme = true
     ) {
-        MainScreen(
-
-        )
+        MainScreen() {}
     }
 }
