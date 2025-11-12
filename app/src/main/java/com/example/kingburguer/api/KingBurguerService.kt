@@ -3,6 +3,7 @@ package com.example.kingburguer.api
 import com.example.kingburguer.BuildConfig
 import com.example.kingburguer.data.CouponResponse
 import com.example.kingburguer.data.FeedResponse
+import com.example.kingburguer.data.HighlightProductResponse
 import com.example.kingburguer.data.LoginRequest
 import com.example.kingburguer.data.LoginResponse
 import com.example.kingburguer.data.ProductDetailResponse
@@ -71,6 +72,11 @@ interface KingBurguerService {
         @Header("Authorization") token: String,
         @Path("id") productId: Int
     ): Response<CouponResponse>
+
+    @GET("highlight")
+    suspend fun fetchHighlight(
+        @Header("Authorization") token: String,
+    ): Response<HighlightProductResponse>
 
 
     companion object {

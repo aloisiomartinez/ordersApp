@@ -50,17 +50,12 @@ fun ProductScreen(
     onCouponGenerated: () -> Unit
 ) {
     val state = viewModel.uiState.collectAsState().value
-    ProductScreenState(
-        modifier = modifier,
-        state = state,
-        couponClicked = {
-            viewModel.createCoupon()
-        },
-        onCouponGenerated = {
-            viewModel.reset()
-            onCouponGenerated()
-        }
-    )
+    ProductScreenState(modifier = modifier, state = state, couponClicked = {
+        viewModel.createCoupon()
+    }, onCouponGenerated = {
+        viewModel.reset()
+        onCouponGenerated()
+    })
 
 }
 
@@ -80,6 +75,7 @@ fun ProductScreenState(
             state.error != null -> {
                 Text(state.error, color = MaterialTheme.colorScheme.primary)
             }
+
             else -> {
                 state.productDetail?.let {
                     ProductScreenShow(modifier, product = state.productDetail, couponClicked)
@@ -107,13 +103,10 @@ fun ProductScreenShow(
 ) {
 
     Surface(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.BottomCenter
+             contentAlignment = Alignment.BottomCenter
         ) {
             Column(
                 modifier = modifier
@@ -150,8 +143,7 @@ fun ProductScreenShow(
                         modifier = Modifier
                             .wrapContentWidth()
                             .background(
-                                MaterialTheme.colorScheme.primary,
-                                RoundedCornerShape(8.dp)
+                                MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp)
                             )
                             .padding(horizontal = 12.dp),
                         text = product.price.currency(),
@@ -161,22 +153,26 @@ fun ProductScreenShow(
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
+
+
                 Text(
-                    modifier = Modifier
-                        .padding(start = 24.dp, end = 24.dp, bottom = 56.dp),
+                    modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 56.dp),
                     style = MaterialTheme.typography.bodyLarge,
                     text = product.description,
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
-                KingButton(
-                    modifier = Modifier.padding(horizontal = 24.dp),
-                    text = stringResource(R.string.get_coupon),
-                    onClick = couponClicked
-                )
+
+                Box(
+                    modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter
+                ) {
+                    KingButton(
+                        modifier = Modifier.padding(start = 24.dp, end = 24.dp),
+                        text = stringResource(R.string.get_coupon),
+                        onClick = couponClicked
+                    )
+                }
             }
-
-
         }
     }
 }
@@ -197,8 +193,7 @@ fun LightProductScreenPreview() {
                 pictureUrl = "",
                 description = "Descrição do Texto do Produto muito grande",
                 categoryResponse = CategoryDetailResponse(
-                    1,
-                    "Categoria Teste"
+                    1, "Categoria Teste"
                 )
             )
         ) {}
@@ -221,8 +216,7 @@ fun DarkProductScreenPreview() {
                 pictureUrl = "",
                 description = "Descrição do Texto do Produto muito grande",
                 categoryResponse = CategoryDetailResponse(
-                    1,
-                    "Categoria Teste"
+                    1, "Categoria Teste"
                 )
             )
         ) {}

@@ -59,6 +59,14 @@ class KingBurguerRepository(
         return apiCall {  service.createCoupon(token, productId) }
     }
 
+    suspend fun fetchHighlight(): ApiResult<HighlightProductResponse> {
+        val userCredentials = localStorage.fetchInitialUserCredentials()
+        val token = "${userCredentials.tokenType} ${userCredentials.accessToken}"
+
+        return apiCall {  service.fetchHighlight(token) }
+
+    }
+
     suspend fun fetchMe(): ApiResult<ProfileResponse> {
         val userCredentials = localStorage.fetchInitialUserCredentials()
         val token = "${userCredentials.tokenType} ${userCredentials.accessToken}"

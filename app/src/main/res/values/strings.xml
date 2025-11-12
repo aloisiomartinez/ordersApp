@@ -39,6 +39,7 @@
     <string name="menu_home">Inicio</string>
     <string name="menu_coupon">Cupom</string>
     <string name="menu_profile">Perfil</string>
+    <string name="show_more">Saiba mais</string>
     <string name="get_coupon">Resgatar Cupom</string>
     <string name="prop_id">Identificador</string>
     <string name="prop_name">Nome</string>
