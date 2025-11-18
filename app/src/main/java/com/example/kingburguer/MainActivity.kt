@@ -16,8 +16,10 @@ import com.example.kingburguer.compose.KingBurguerNavHost
 import com.example.kingburguer.compose.Screen
 import com.example.kingburguer.ui.theme.KingBurguerTheme
 import com.example.kingburguer.viewmodels.SplashViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel: SplashViewModel by viewModels {
         SplashViewModel.factory
