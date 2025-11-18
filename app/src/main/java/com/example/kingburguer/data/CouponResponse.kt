@@ -3,6 +3,8 @@ package com.example.kingburguer.data
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 
+
+
 data class CouponResponse(
     val id: Int,
     @SerializedName("user_id")

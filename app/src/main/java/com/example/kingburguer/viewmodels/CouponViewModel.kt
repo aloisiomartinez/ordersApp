@@ -9,9 +9,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.kingburguer.api.KingBurguerService
+import com.example.kingburguer.compose.coupon.CouponUiState
+import com.example.kingburguer.compose.home.HomeUiState
 import com.example.kingburguer.compose.login.LoginFormState
 import com.example.kingburguer.compose.login.LoginUiState
 import com.example.kingburguer.compose.signup.FieldState
+import com.example.kingburguer.data.ApiResult
 import com.example.kingburguer.data.KingBurguerLocalStorage
 import com.example.kingburguer.data.KingBurguerRepository
 import com.example.kingburguer.data.LoginRequest
@@ -42,70 +45,41 @@ enum class CouponFilter {
 
 class CouponViewModel(
     private val repository: KingBurguerRepository
-): ViewModel() {
+) : ViewModel() {
 
-    private val _coupons = MutableStateFlow<List<Coupon>>(emptyList())
-    val coupons: StateFlow<List<Coupon>> = _coupons.asStateFlow()
+    private val _uiState = MutableStateFlow(CouponUiState())
+    val uiState: StateFlow<CouponUiState> = _uiState.asStateFlow()
 
-    private val _selectedFilter  = MutableStateFlow(CouponFilter.ALL)
+    private val _selectedFilter = MutableStateFlow(CouponFilter.ALL)
     val selectedFilter: StateFlow<CouponFilter> = _selectedFilter.asStateFlow()
 
     private val _filteredCoupons = MutableStateFlow<List<Coupon>>(emptyList())
     val filteredCoupons: StateFlow<List<Coupon>> = _filteredCoupons.asStateFlow()
 
-    private val _uiState = MutableStateFlow(LoginUiState())
-    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     init {
         loadCoupons()
     }
 
     fun loadCoupons() {
+        _uiState.update { it.copy(isLoading = true) }
+
         viewModelScope.launch {
-            _uiState.update {
-                it.copy(isLoading = true)
+            val response = repository.fetchCoupons()
+
+            when (response) {
+                is ApiResult.Error -> {
+                    _uiState.update { it.copy(isLoading = false, error = response.message) }
+                }
+
+                is ApiResult.Success -> {
+                    _uiState.update { it.copy(isLoading = false, coupons = response.data) }
+                }
             }
 
-            val couponsMock = listOf(
-                Coupon("1", "Cupom 1", "12/12/2025 16:23:32"),
-                Coupon("2", "Cupom 2", "11/11/2024 14:20:10"),
-                Coupon("3", "Cupom 3", "10/10/2023 12:15:05"),
-                Coupon("4", "Cupom 4", "09/09/2022 10:10:00")
-            )
-
-            _coupons.value = couponsMock
-
-            _uiState.update {
-                it.copy(isLoading = false)
-            }
-
-            applyFilter()
         }
     }
 
-    fun setFilter(filter: CouponFilter) {
-        _selectedFilter.value = filter
-        applyFilter()
-    }
-
-    private fun applyFilter() {
-        _filteredCoupons.value = when (_selectedFilter.value) {
-            CouponFilter.ACTIVE -> _coupons.value.filter { isCouponActive(it.expirationDate) }
-            CouponFilter.EXPIRED -> _coupons.value.filter { !isCouponActive(it.expirationDate) }
-            CouponFilter.ALL -> _coupons.value
-        }
-    }
-
-    fun isCouponActive(dateString: String): Boolean {
-        return try {
-            val format = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
-            val couponDate = format.parse(dateString)
-            val currentDate = Date()
-            couponDate?.after(currentDate) ?: false
-        } catch (e: Exception) {
-            false
-        }
-    }
 
     companion object {
         val factory = viewModelFactory {

@@ -1,5 +1,6 @@
 package com.example.kingburguer.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
@@ -23,9 +24,12 @@ class SplashViewModel(
     private val _hasSessionState = MutableStateFlow<Boolean?>(null)
     val hasSession: StateFlow<Boolean?> = _hasSessionState
 
+
+
     init {
         viewModelScope.launch {
             with(repository.fetchInitialCredentials()) {
+
                 _hasSessionState.value = when {
                     // Usuário Nunca logou -> Vai para a tela de Login
                     accessToken.isEmpty() -> false

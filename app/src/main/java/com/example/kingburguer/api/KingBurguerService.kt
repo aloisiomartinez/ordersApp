@@ -45,11 +45,10 @@ interface KingBurguerService {
         @Header("Authorization") token: String
     ): Response<LoginResponse>
 
-    @POST("/coupons?page=0&expires=1/login")
+    @GET("coupons?page=0&expires=1")
     suspend fun fetchCoupons(
-        @Body loginRequest: LoginRequest,
-        @Header("x-secret-key") secretKey: String = BuildConfig.X_SECRET_KEY
-    ): Response<ResponseBody>
+        @Header("Authorization") token: String
+    ): Response<List<CouponResponse>>
 
     @GET("feed")
     suspend fun fetchFeed(
